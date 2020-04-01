@@ -2,11 +2,13 @@ import 'package:benayty/bloc/home_page_bloc/bloc.dart';
 import 'package:benayty/ui/home_pages/home_page.dart';
 import 'package:benayty/ui/home_pages/messages_page.dart';
 import 'package:benayty/ui/home_pages/notifications_page.dart';
+import 'package:benayty/ui/home_pages/secondary_page.dart';
 import 'package:benayty/ui/home_pages/wishlist_page.dart';
 import 'package:benayty/ui/my_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   final _key = GlobalKey<ScaffoldState>();
@@ -19,16 +21,16 @@ class Home extends StatelessWidget {
         children: <Widget>[
           Flexible(
               child: Text(
-                title,
-                style: TextStyle(fontFamily: 'Cairo', color: Color(0xff1f80a9)),
-              )),
+            title,
+            style: TextStyle(fontFamily: 'Cairo', color: Color(0xff1f80a9)),
+          )),
           Flexible(
               child: Padding(
             padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  icon,
-                  color: Color(0xff1f80a9),
-                ),
+            child: Icon(
+              icon,
+              color: Color(0xff1f80a9),
+            ),
           )),
         ],
       ),
@@ -37,6 +39,9 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int _mainCategoryId = 0;
+    String _mainCategoryTitle = '';
+
     return BlocProvider(
       create: (_) => HomePageBloc()..add(NavigateToHomePageEvent()),
       child: BlocBuilder<HomePageBloc, HomePageState>(
@@ -108,27 +113,41 @@ class Home extends StatelessWidget {
                 title: Text(
                   state is MainPageState
                       ? 'الرئيسية'
-                      : state is WishListPageState
-                      ? 'المفضلة'
-                      : state is MessagesPageState
-                      ? 'الرسائل'
-                      : state is NotificationsPageState
-                      ? 'الإشعارات'
-                      : '',
+                      : state is SecondaryPageState
+                          ? _mainCategoryTitle
+                          : state is WishListPageState
+                              ? 'المفضلة'
+                              : state is MessagesPageState
+                                  ? 'الرسائل'
+                                  : state is NotificationsPageState
+                                      ? 'الإشعارات'
+                                      : '',
                   style: TextStyle(
                     fontFamily: 'Cairo',
                   ),
                 ),
               ),
               body: state is MainPageState
-                  ? HomePage()
+                  ? HomePage(
+                      showSecondaryCategoriesFunction:
+                          (int value, String title) {
+                        _mainCategoryId = value;
+                        _mainCategoryTitle = title;
+                        BlocProvider.of<HomePageBloc>(context)
+                            .add(NavigateToSecondaryPageEvent());
+                      },
+                    )
                   : state is WishListPageState
-                  ? WishListPage()
-                  : state is NotificationsPageState
-                  ? NotificationsPage()
-                  : state is MessagesPageState
-                  ? MessagesPage()
-                  : Container(),
+                      ? WishListPage()
+                      : state is SecondaryPageState
+                          ? SecondaryPage(
+                              mainCategoryId: _mainCategoryId,
+                            )
+                          : state is NotificationsPageState
+                              ? NotificationsPage()
+                              : state is MessagesPageState
+                                  ? MessagesPage()
+                                  : Container(),
               bottomNavigationBar: Stack(
                 overflow: Overflow.visible,
                 alignment: FractionalOffset(0.5, 1.0),
@@ -146,21 +165,21 @@ class Home extends StatelessWidget {
                               GestureDetector(
                                 child: state is MessagesPageState
                                     ? Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff1f80a9),
-                                    borderRadius:
-                                    BorderRadius.circular(30.0),
-                                  ),
-                                  child: Icon(
-                                    MyIcons.comment,
-                                    color: Colors.white,
-                                  ),
-                                )
+                                        padding: EdgeInsets.all(5.0),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff1f80a9),
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
+                                        child: Icon(
+                                          MyIcons.comment,
+                                          color: Colors.white,
+                                        ),
+                                      )
                                     : Icon(
-                                  MyIcons.comment,
-                                  color: Color(0xff1f80a9),
-                                ),
+                                        MyIcons.comment,
+                                        color: Color(0xff1f80a9),
+                                      ),
                                 onTap: () {
                                   BlocProvider.of<HomePageBloc>(context)
                                       .add(NavigateToMessagesPageEvent());
@@ -173,21 +192,21 @@ class Home extends StatelessWidget {
                                   },
                                   child: state is NotificationsPageState
                                       ? Container(
-                                    padding: EdgeInsets.all(5.0),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xff1f80a9),
-                                      borderRadius:
-                                      BorderRadius.circular(30.0),
-                                    ),
-                                    child: Icon(
-                                      Icons.notifications,
-                                      color: Colors.white,
-                                    ),
-                                  )
+                                          padding: EdgeInsets.all(5.0),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xff1f80a9),
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
+                                          child: Icon(
+                                            Icons.notifications,
+                                            color: Colors.white,
+                                          ),
+                                        )
                                       : Icon(
-                                    Icons.notifications,
-                                    color: Color(0xff1f80a9),
-                                  )),
+                                          Icons.notifications,
+                                          color: Color(0xff1f80a9),
+                                        )),
                             ],
                           ),
                         ),
@@ -203,21 +222,21 @@ class Home extends StatelessWidget {
                                 },
                                 child: state is WishListPageState
                                     ? Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff1f80a9),
-                                    borderRadius:
-                                    BorderRadius.circular(30.0),
-                                  ),
-                                  child: Icon(
-                                    Icons.favorite,
-                                    color: Colors.white,
-                                  ),
-                                )
+                                        padding: EdgeInsets.all(5.0),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff1f80a9),
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
+                                        child: Icon(
+                                          Icons.favorite,
+                                          color: Colors.white,
+                                        ),
+                                      )
                                     : Icon(
-                                  Icons.favorite,
-                                  color: Color(0xff1f80a9),
-                                ),
+                                        Icons.favorite,
+                                        color: Color(0xff1f80a9),
+                                      ),
                               ),
                               GestureDetector(
                                 onTap: () {
@@ -226,21 +245,21 @@ class Home extends StatelessWidget {
                                 },
                                 child: state is MainPageState
                                     ? Container(
-                                  padding: EdgeInsets.all(5.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(30.0),
-                                    color: Color(0xff1f80a9),
-                                  ),
-                                  child: Icon(
-                                    Icons.home,
-                                    color: Colors.white,
-                                  ),
-                                )
+                                        padding: EdgeInsets.all(5.0),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                          color: Color(0xff1f80a9),
+                                        ),
+                                        child: Icon(
+                                          Icons.home,
+                                          color: Colors.white,
+                                        ),
+                                      )
                                     : Icon(
-                                  Icons.home,
-                                  color: Color(0xff1f80a9),
-                                ),
+                                        Icons.home,
+                                        color: Color(0xff1f80a9),
+                                      ),
                               ),
                             ],
                           ),

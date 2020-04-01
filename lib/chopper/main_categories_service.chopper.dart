@@ -22,4 +22,12 @@ class _$MainCategoriesService extends MainCategoriesService {
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> getSecondaryCategories(int mainCategoryId) {
+    final $url = '/benaity/public/api/secondary';
+    final $params = <String, dynamic>{'main_id': mainCategoryId};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
 }

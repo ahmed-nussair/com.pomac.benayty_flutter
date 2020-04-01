@@ -14,6 +14,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       yield MainPageState();
     } else if (event is NavigateToWishListPageEvent){
       yield WishListPageState();
+    } else if (event is NavigateToSecondaryPageEvent){
+      yield SecondaryPageState();
     } else if (event is NavigateToNotificationsPageEvent){
       yield NotificationsPageState();
     } else if (event is NavigateToMessagesPageEvent){

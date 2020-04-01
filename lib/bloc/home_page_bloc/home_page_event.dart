@@ -9,6 +9,11 @@ class NavigateToHomePageEvent extends HomePageEvent{
   List<Object> get props => [];
 }
 
+class NavigateToSecondaryPageEvent extends HomePageEvent{
+  @override
+  List<Object> get props => [];
+}
+
 class NavigateToWishListPageEvent extends HomePageEvent{
   @override
   List<Object> get props => [];

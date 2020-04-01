@@ -8,18 +8,29 @@ import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
 
+  final Function(int, String) showSecondaryCategoriesFunction;
+
+  HomePage({@required this.showSecondaryCategoriesFunction});
+
   @override
   Widget build(BuildContext context) {
 
     return Provider(
       create: (_) => MainCategoriesService.create(),
       dispose: (_, MainCategoriesService service) => service.client.dispose(),
-      child: HomePageBody(),
+      child: _HomePageBody(
+        showSecondaryCategoriesFunction: showSecondaryCategoriesFunction,
+      ),
     );
   }
 }
 
-class HomePageBody extends StatelessWidget {
+class _HomePageBody extends StatelessWidget {
+
+  final Function(int, String) showSecondaryCategoriesFunction;
+
+  _HomePageBody({@required this.showSecondaryCategoriesFunction});
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Response>(
@@ -38,10 +49,15 @@ class HomePageBody extends StatelessWidget {
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 1,
                   children: List.generate(categoriesList.length, (index){
-                    return Item(title: categoriesList[index]['name'],
-                      image: categoriesList[index]['imagePath'],
-                      function: (){},
-                      length: MediaQuery.of(context).size.width / 2.3,);
+                    return GestureDetector(
+                      onTap: (){
+                        showSecondaryCategoriesFunction(categoriesList[index]['id'], categoriesList[index]['name']);
+                      },
+                      child: Item(title: categoriesList[index]['name'],
+                        image: categoriesList[index]['imagePath'],
+                        function: (){},
+                        length: MediaQuery.of(context).size.width / 2.3,),
+                    );
                   }),
                 ),
               )
@@ -92,7 +108,7 @@ class Item extends StatelessWidget {
               Text(title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontFamily: 'Cairo',
+                  fontFamily: 'Cairo',
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),

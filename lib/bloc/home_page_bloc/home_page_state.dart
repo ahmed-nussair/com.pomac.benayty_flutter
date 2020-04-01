@@ -14,6 +14,11 @@ class MainPageState extends HomePageState {
   List<Object> get props => [];
 }
 
+class SecondaryPageState extends HomePageState {
+  @override
+  List<Object> get props => [];
+}
+
 class WishListPageState extends HomePageState {
   @override
   List<Object> get props => [];
