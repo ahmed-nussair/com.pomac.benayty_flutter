@@ -30,4 +30,19 @@ class _$MainCategoriesService extends MainCategoriesService {
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> getAreas() {
+    final $url = '/benaity/public/api/areas';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> getCities(int areaId) {
+    final $url = '/benaity/public/api/cities';
+    final $params = <String, dynamic>{'area_id': areaId};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
 }

@@ -8,7 +8,6 @@ import 'package:benayty/ui/my_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   final _key = GlobalKey<ScaffoldState>();
@@ -98,6 +97,16 @@ class Home extends StatelessWidget {
                 ),
               ),
               appBar: AppBar(
+                leading: state is SecondaryPageState
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          child: Icon(Icons.arrow_back_ios),
+                          onTap: () => BlocProvider.of<HomePageBloc>(context)
+                              .add(NavigateToHomePageEvent()),
+                        ),
+                      )
+                    : Container(),
                 actions: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -142,6 +151,9 @@ class Home extends StatelessWidget {
                       : state is SecondaryPageState
                           ? SecondaryPage(
                               mainCategoryId: _mainCategoryId,
+                              onBackPressed: () =>
+                                  BlocProvider.of<HomePageBloc>(context)
+                                      .add(NavigateToHomePageEvent()),
                             )
                           : state is NotificationsPageState
                               ? NotificationsPage()

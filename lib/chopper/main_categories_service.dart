@@ -11,6 +11,12 @@ abstract class MainCategoriesService extends ChopperService {
   @Get(path: '/secondary')
   Future<Response> getSecondaryCategories(@Query('main_id') int mainCategoryId);
 
+  @Get(path: '/areas')
+  Future<Response> getAreas();
+
+  @Get(path: '/cities')
+  Future<Response> getCities(@Query('area_id') int areaId);
+
   static MainCategoriesService create(){
     var client = ChopperClient(
       baseUrl: 'https://pomac.info',
