@@ -17,6 +17,7 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
+  provider: ^4.0.4
   chopper: ^3.0.2
   equatable: ^1.1.1
   flutter_bloc:

@@ -9,9 +9,6 @@ void main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SafeArea(child: Splash()),
-//      routes: {
-//        '/home' : (context) => Home(),
-//      },
     ),
   );
 }
