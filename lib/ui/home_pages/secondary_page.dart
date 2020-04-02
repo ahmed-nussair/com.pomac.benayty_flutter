@@ -40,7 +40,10 @@ class _SecondaryPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    int _itemId = -1;
     int _areaId = -1;
+    int _cityId = -1;
+
     String _itemName = '';
     String _areaName = '';
     String _cityName = '';
@@ -69,6 +72,7 @@ class _SecondaryPageBody extends StatelessWidget {
                               final rawData = await Provider.of<MainCategoriesService>(context, listen: false).getSecondaryCategories(mainCategoryId);
                               final data = json.decode(rawData.bodyString);
                               final List list = data['data'];
+
                               showDialog(context: context,
                                   builder: (context){
                                     return AlertDialog(
@@ -262,22 +266,27 @@ class _SecondaryPageBody extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        alignment: Alignment.topCenter,
-                        padding: EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          color: Color(0xff1f80a9),
-                          borderRadius: BorderRadius.circular(30.0),
-                          border: Border.all(
-                            width: 1,
+                      child: GestureDetector(
+                        onTap: (){
+
+                        },
+                        child: Container(
+                          alignment: Alignment.topCenter,
+                          padding: EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
                             color: Color(0xff1f80a9),
+                            borderRadius: BorderRadius.circular(30.0),
+                            border: Border.all(
+                              width: 1,
+                              color: Color(0xff1f80a9),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          'بحث',
-                          style: TextStyle(
-                            fontFamily: 'Cairo',
-                            color: Colors.white,
+                          child: Text(
+                            'بحث',
+                            style: TextStyle(
+                              fontFamily: 'Cairo',
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

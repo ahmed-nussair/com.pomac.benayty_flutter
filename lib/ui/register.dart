@@ -33,17 +33,26 @@ final List codes = [
 ];
 
 class Register extends StatelessWidget {
+
+  final Function onRegistered;
+
+  Register({this.onRegistered});
+
   @override
   Widget build(BuildContext context) {
     return Provider(
       create: (_) => CredentialsService.create(),
       dispose: (_, CredentialsService service) => service.client.dispose(),
-      child: RegisterBody(),
+      child: RegisterBody(onRegistered: onRegistered,),
     );
   }
 }
 
 class RegisterBody extends StatefulWidget {
+
+  final Function onRegistered;
+
+  RegisterBody({this.onRegistered});
   @override
   _RegisterState createState() => _RegisterState();
 }
@@ -336,12 +345,22 @@ class _RegisterState extends State<RegisterBody> {
 
                               if(theData['status'] == 200){
                                 Navigator.of(context).pop();
+                                widget.onRegistered();
                               } else {
                                 showDialog(context: context,
                                   child: AlertDialog(
-                                    content: Center(
-                                      child: Text(theData['errors'][0]),
-                                    ),
+                                    content: Text(theData['errors'][0]),
+                                    actions: <Widget>[Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () => Navigator.of(context).pop(),
+                                        child: Text('إغلاق',
+                                          style: TextStyle(
+                                            fontFamily: 'Cairo',
+                                          ),
+                                        ),
+                                      ),
+                                    )],
                                   ),
                                 );
                               }

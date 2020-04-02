@@ -84,7 +84,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     {'تسجيل الدخول':() => Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => Login(onLogin: () =>
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home())),))),
-    'التسجيل': () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Register())),
+    'التسجيل': () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Register(
+      onRegistered: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home())),
+    ))),
     'التخطي': () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()))};
     return Scaffold(
       body: Stack(

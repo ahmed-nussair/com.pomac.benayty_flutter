@@ -186,6 +186,17 @@ class _LoginState extends State<LoginBody> {
                                 showDialog(context: context,
                                   child: AlertDialog(
                                     content: Text(theData['errors'][0]),
+                                    actions: <Widget>[Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () => Navigator.of(context).pop(),
+                                        child: Text('إغلاق',
+                                          style: TextStyle(
+                                            fontFamily: 'Cairo',
+                                          ),
+                                        ),
+                                      ),
+                                    )],
                                   ),
                                 );
                               }
