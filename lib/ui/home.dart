@@ -189,7 +189,7 @@ class Home extends StatelessWidget {
                                         ),
                                       )
                                     : Icon(
-                                        MyIcons.comment,
+                                        MyIcons.comment_empty,
                                         color: Color(0xff1f80a9),
                                       ),
                                 onTap: () {
@@ -216,7 +216,7 @@ class Home extends StatelessWidget {
                                           ),
                                         )
                                       : Icon(
-                                          Icons.notifications,
+                                          Icons.notifications_none,
                                           color: Color(0xff1f80a9),
                                         )),
                             ],
@@ -246,7 +246,7 @@ class Home extends StatelessWidget {
                                         ),
                                       )
                                     : Icon(
-                                        Icons.favorite,
+                                        Icons.favorite_border,
                                         color: Color(0xff1f80a9),
                                       ),
                               ),
@@ -269,7 +269,7 @@ class Home extends StatelessWidget {
                                         ),
                                       )
                                     : Icon(
-                                        Icons.home,
+                                        MyIcons.home_outline,
                                         color: Color(0xff1f80a9),
                                       ),
                               ),

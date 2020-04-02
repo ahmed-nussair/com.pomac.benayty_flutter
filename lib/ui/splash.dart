@@ -81,7 +81,9 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
 
     final Map<String, Function> splashButtons =
-    {'تسجيل الدخول':() => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Login())),
+    {'تسجيل الدخول':() => Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Login(onLogin: () =>
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home())),))),
     'التسجيل': () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Register())),
     'التخطي': () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()))};
     return Scaffold(

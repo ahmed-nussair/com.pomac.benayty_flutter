@@ -62,6 +62,12 @@ flutter:
   # https://flutter.dev/assets-and-images/#from-packages
 
   fonts:
+    - family: CommentOutline
+      fonts:
+        - asset: assets/fonts/comment_outline.ttf
+    - family: HomeOutline
+      fonts:
+        - asset: assets/fonts/home_outline.ttf
     - family: Comment
       fonts:
         - asset: assets/fonts/comment.ttf

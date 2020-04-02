@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:benayty/chopper/credentials_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -329,6 +331,20 @@ class _RegisterState extends State<RegisterBody> {
                               setState(() {
                                 _registering = false;
                               });
+
+                              final theData = json.decode(data.bodyString);
+
+                              if(theData['status'] == 200){
+                                Navigator.of(context).pop();
+                              } else {
+                                showDialog(context: context,
+                                  child: AlertDialog(
+                                    content: Center(
+                                      child: Text(theData['errors'][0]),
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
                               padding: EdgeInsets.all(8.0),

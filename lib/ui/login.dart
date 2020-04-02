@@ -1,20 +1,29 @@
+import 'dart:convert';
+
 import 'package:benayty/chopper/credentials_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
+
+  final Function onLogin;
+
+  Login({this.onLogin});
   @override
   Widget build(BuildContext context) {
     return Provider(
       create: (_) => CredentialsService.create(),
       dispose: (_, CredentialsService service) => service.client.dispose(),
-      child: LoginBody(),
+      child: LoginBody(onLogin: onLogin,),
     );
   }
 }
 
 class LoginBody extends StatefulWidget {
+  final Function onLogin;
+
+  LoginBody({this.onLogin});
   @override
   _LoginState createState() => _LoginState();
 }
@@ -167,6 +176,19 @@ class _LoginState extends State<LoginBody> {
                               setState(() {
                                 _loggingIn = false;
                               });
+
+                              final theData = json.decode(data.bodyString);
+                              if(theData['status'] == 200){
+
+                                Navigator.of(context).pop();
+                                widget.onLogin();
+                              } else {
+                                showDialog(context: context,
+                                  child: AlertDialog(
+                                    content: Text(theData['errors'][0]),
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width,

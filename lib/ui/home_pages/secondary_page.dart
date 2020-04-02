@@ -301,7 +301,7 @@ class _SecondaryItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: List.generate(list.length, (index){
         return GestureDetector(
           onTap: (){
@@ -338,7 +338,7 @@ class _AreasItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: List.generate(list.length, (index){
         return GestureDetector(
           onTap: (){
@@ -375,7 +375,7 @@ class _CityItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: List.generate(list.length, (index){
         return GestureDetector(
           onTap: (){
