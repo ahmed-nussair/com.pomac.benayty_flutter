@@ -8,7 +8,7 @@ abstract class CredentialsService extends ChopperService{
   @Post(path: '/login')
   Future<Response> login(@Body() Map<String, dynamic> data);
 
-  @Post(path: '/register')
+  @Post(path: '/users/register')
   Future<Response> register(@Body() Map<String, dynamic> data);
 
   static CredentialsService create(){

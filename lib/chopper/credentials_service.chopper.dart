@@ -26,7 +26,7 @@ class _$CredentialsService extends CredentialsService {
 
   @override
   Future<Response<dynamic>> register(Map<String, dynamic> data) {
-    final $url = '/benaity/public/api/register';
+    final $url = '/benaity/public/api/users/register';
     final $body = data;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
