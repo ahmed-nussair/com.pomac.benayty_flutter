@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddAdvertisementPage1 extends StatelessWidget {
-
   final Function onNextPage;
 
   AddAdvertisementPage1({@required this.onNextPage});
@@ -16,7 +15,9 @@ class AddAdvertisementPage1 extends StatelessWidget {
     return Provider(
       create: (_) => MainCategoriesService.create(),
       dispose: (_, MainCategoriesService service) => service.client.dispose(),
-      child: _Body(onNextPage: onNextPage,),
+      child: _Body(
+        onNextPage: onNextPage,
+      ),
     );
   }
 }
@@ -30,7 +31,6 @@ class _Body extends StatefulWidget {
 }
 
 class __BodyState extends State<_Body> {
-
   int _mainItemId = -1;
   int _secondaryItemId = -1;
   int _areaId = -1;
@@ -65,7 +65,8 @@ class __BodyState extends State<_Body> {
                         Container(
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(10.0),
-                          child: Text('القسم الرئيسي',
+                          child: Text(
+                            'القسم الرئيسي',
                             style: TextStyle(
                               fontFamily: 'Cairo',
                               color: Color(0xff1f80a9),
@@ -74,19 +75,25 @@ class __BodyState extends State<_Body> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            final rawData = await Provider.of<MainCategoriesService>(context, listen: false).getMainCategories();
+                            final rawData =
+                            await Provider.of<MainCategoriesService>(
+                                context,
+                                listen: false)
+                                .getMainCategories();
                             final data = json.decode(rawData.bodyString);
                             final List list = data['data'];
 
-                            showDialog(context: context,
-                                builder: (context){
+                            showDialog(
+                                context: context,
+                                builder: (context) {
                                   return AlertDialog(
                                     titlePadding: EdgeInsets.all(0.0),
                                     contentPadding: EdgeInsets.all(0.0),
                                     title: Container(
                                       padding: EdgeInsets.all(10.0),
                                       color: Color(0xff1f80a9),
-                                      child: Text('القسم الرئيسي',
+                                      child: Text(
+                                        'القسم الرئيسي',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.white,
@@ -111,8 +118,7 @@ class __BodyState extends State<_Body> {
                                       },
                                     ),
                                   );
-                                }
-                            );
+                                });
                           },
                           child: Container(
                             alignment: Alignment.centerRight,
@@ -124,7 +130,10 @@ class __BodyState extends State<_Body> {
                                 color: Color(0xff1f80a9),
                               ),
                             ),
-                            child: Text(_mainItemId != -1? _mainItemName:'القسم الرئيسي',
+                            child: Text(
+                              _mainItemId != -1
+                                  ? _mainItemName
+                                  : 'القسم الرئيسي',
                               style: TextStyle(
                                 fontFamily: 'Cairo',
                                 color: Color(0xff1f80a9),
@@ -132,11 +141,13 @@ class __BodyState extends State<_Body> {
                             ),
                           ),
                         ),
-                        _mainItem? Container()
-                            :Container(
+                        _mainItem
+                            ? Container()
+                            : Container(
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(10.0),
-                          child: Text('القسم الرئيسي مطلوب',
+                          child: Text(
+                            'القسم الرئيسي مطلوب',
                             style: TextStyle(
                               fontFamily: 'Cairo',
                               color: Colors.red,
@@ -154,7 +165,8 @@ class __BodyState extends State<_Body> {
                         Container(
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(10.0),
-                          child: Text('القسم الفرعي',
+                          child: Text(
+                            'القسم الفرعي',
                             style: TextStyle(
                               fontFamily: 'Cairo',
                               color: Color(0xff1f80a9),
@@ -162,22 +174,27 @@ class __BodyState extends State<_Body> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () async{
-
-                            if(_mainItemId != -1){
-                              final rawData = await Provider.of<MainCategoriesService>(context, listen: false).getSecondaryCategories(_mainItemId);
+                          onTap: () async {
+                            if (_mainItemId != -1) {
+                              final rawData =
+                              await Provider.of<MainCategoriesService>(
+                                  context,
+                                  listen: false)
+                                  .getSecondaryCategories(_mainItemId);
                               final data = json.decode(rawData.bodyString);
                               final List list = data['data'];
 
-                              showDialog(context: context,
-                                  builder: (context){
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
                                     return AlertDialog(
                                       titlePadding: EdgeInsets.all(0.0),
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Container(
                                         padding: EdgeInsets.all(10.0),
                                         color: Color(0xff1f80a9),
-                                        child: Text('القسم الفرعي',
+                                        child: Text(
+                                          'القسم الفرعي',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.white,
@@ -188,7 +205,6 @@ class __BodyState extends State<_Body> {
                                         list: list,
                                         onItemSelected: (int id, String value) {
                                           setState(() {
-
                                             _secondaryItemId = id;
                                             _secondaryItemName = value;
 
@@ -199,10 +215,8 @@ class __BodyState extends State<_Body> {
                                         },
                                       ),
                                     );
-                                  }
-                              );
+                                  });
                             }
-
                           },
                           child: Container(
                             alignment: Alignment.centerRight,
@@ -214,7 +228,10 @@ class __BodyState extends State<_Body> {
                                 color: Color(0xff1f80a9),
                               ),
                             ),
-                            child: Text(_secondaryItemId != -1?_secondaryItemName:'القسم الفرعي',
+                            child: Text(
+                              _secondaryItemId != -1
+                                  ? _secondaryItemName
+                                  : 'القسم الفرعي',
                               style: TextStyle(
                                 fontFamily: 'Cairo',
                                 color: Color(0xff1f80a9),
@@ -222,11 +239,13 @@ class __BodyState extends State<_Body> {
                             ),
                           ),
                         ),
-                        _secondaryItem? Container()
-                            :Container(
+                        _secondaryItem
+                            ? Container()
+                            : Container(
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(10.0),
-                          child: Text('القسم الفرعي مطلوب',
+                          child: Text(
+                            'القسم الفرعي مطلوب',
                             style: TextStyle(
                               fontFamily: 'Cairo',
                               color: Colors.red,
@@ -243,7 +262,8 @@ class __BodyState extends State<_Body> {
                         Container(
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(10.0),
-                          child: Text('المنطقة',
+                          child: Text(
+                            'المنطقة',
                             style: TextStyle(
                               fontFamily: 'Cairo',
                               color: Color(0xff1f80a9),
@@ -251,20 +271,26 @@ class __BodyState extends State<_Body> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () async{
-                            final rawData = await Provider.of<MainCategoriesService>(context, listen: false).getAreas();
+                          onTap: () async {
+                            final rawData =
+                            await Provider.of<MainCategoriesService>(
+                                context,
+                                listen: false)
+                                .getAreas();
                             final data = json.decode(rawData.bodyString);
                             final List list = data['data'];
 
-                            showDialog(context: context,
-                                builder: (context){
+                            showDialog(
+                                context: context,
+                                builder: (context) {
                                   return AlertDialog(
                                     titlePadding: EdgeInsets.all(0.0),
                                     contentPadding: EdgeInsets.all(0.0),
                                     title: Container(
                                       padding: EdgeInsets.all(10.0),
                                       color: Color(0xff1f80a9),
-                                      child: Text('المنطقة',
+                                      child: Text(
+                                        'المنطقة',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.white,
@@ -289,8 +315,7 @@ class __BodyState extends State<_Body> {
                                       },
                                     ),
                                   );
-                                }
-                            );
+                                });
                           },
                           child: Container(
                             alignment: Alignment.centerRight,
@@ -302,7 +327,8 @@ class __BodyState extends State<_Body> {
                                 color: Color(0xff1f80a9),
                               ),
                             ),
-                            child: Text(_areaId != -1?_areaName:'المنطقة',
+                            child: Text(
+                              _areaId != -1 ? _areaName : 'المنطقة',
                               style: TextStyle(
                                 fontFamily: 'Cairo',
                                 color: Color(0xff1f80a9),
@@ -310,11 +336,13 @@ class __BodyState extends State<_Body> {
                             ),
                           ),
                         ),
-                        _area? Container()
-                            :Container(
+                        _area
+                            ? Container()
+                            : Container(
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(10.0),
-                          child: Text('من فضلك أدخل المنطقة',
+                          child: Text(
+                            'من فضلك أدخل المنطقة',
                             style: TextStyle(
                               fontFamily: 'Cairo',
                               color: Colors.red,
@@ -331,7 +359,8 @@ class __BodyState extends State<_Body> {
                         Container(
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(10.0),
-                          child: Text('المدينة',
+                          child: Text(
+                            'المدينة',
                             style: TextStyle(
                               fontFamily: 'Cairo',
                               color: Color(0xff1f80a9),
@@ -339,21 +368,27 @@ class __BodyState extends State<_Body> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () async{
-                            if (_areaId != -1){
-                              final rawData = await Provider.of<MainCategoriesService>(context, listen: false).getCities(_areaId);
+                          onTap: () async {
+                            if (_areaId != -1) {
+                              final rawData =
+                              await Provider.of<MainCategoriesService>(
+                                  context,
+                                  listen: false)
+                                  .getCities(_areaId);
                               final data = json.decode(rawData.bodyString);
                               final List list = data['data'];
 
-                              showDialog(context: context,
-                                  builder: (context){
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
                                     return AlertDialog(
                                       titlePadding: EdgeInsets.all(0.0),
                                       contentPadding: EdgeInsets.all(0.0),
                                       title: Container(
                                         padding: EdgeInsets.all(10.0),
                                         color: Color(0xff1f80a9),
-                                        child: Text('المدينة',
+                                        child: Text(
+                                          'المدينة',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             color: Colors.white,
@@ -364,7 +399,6 @@ class __BodyState extends State<_Body> {
                                         list: list,
                                         onItemSelected: (int id, String value) {
                                           setState(() {
-
                                             _cityId = id;
                                             _cityName = value;
 
@@ -375,8 +409,7 @@ class __BodyState extends State<_Body> {
                                         },
                                       ),
                                     );
-                                  }
-                              );
+                                  });
                             }
                           },
                           child: Container(
@@ -389,7 +422,8 @@ class __BodyState extends State<_Body> {
                                 color: Color(0xff1f80a9),
                               ),
                             ),
-                            child: Text(_cityId != -1?_cityName:'المدينة',
+                            child: Text(
+                              _cityId != -1 ? _cityName : 'المدينة',
                               style: TextStyle(
                                 fontFamily: 'Cairo',
                                 color: Color(0xff1f80a9),
@@ -397,11 +431,13 @@ class __BodyState extends State<_Body> {
                             ),
                           ),
                         ),
-                        _city? Container()
-                            :Container(
+                        _city
+                            ? Container()
+                            : Container(
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(10.0),
-                          child: Text('من فضلك أدخل المدينة',
+                          child: Text(
+                            'من فضلك أدخل المدينة',
                             style: TextStyle(
                               fontFamily: 'Cairo',
                               color: Colors.red,
@@ -411,36 +447,41 @@ class __BodyState extends State<_Body> {
                       ],
                     ),
                   ),
-
                 ],
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 90.0, left: 90.0,),
+            padding: const EdgeInsets.only(
+              right: 90.0,
+              left: 90.0,
+            ),
             child: GestureDetector(
-              onTap: (){
-                if(_mainItemId == -1 || _secondaryItemId == -1 || _areaId == -1 || _cityId == -1){
+              onTap: () {
+                if (_mainItemId == -1 ||
+                    _secondaryItemId == -1 ||
+                    _areaId == -1 ||
+                    _cityId == -1) {
                   setState(() {
-                    if(_mainItemId == -1){
+                    if (_mainItemId == -1) {
                       _mainItem = false;
                     } else {
                       _mainItem = true;
                     }
 
-                    if(_secondaryItemId == -1){
+                    if (_secondaryItemId == -1) {
                       _secondaryItem = false;
                     } else {
                       _secondaryItem = true;
                     }
 
-                    if(_areaId == -1){
+                    if (_areaId == -1) {
                       _area = false;
-                    }else {
+                    } else {
                       _area = true;
                     }
 
-                    if(_cityId == -1){
+                    if (_cityId == -1) {
                       _city = false;
                     } else {
                       _city = true;
@@ -459,7 +500,8 @@ class __BodyState extends State<_Body> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text('التالي',
+                      child: Text(
+                        'التالي',
                         style: TextStyle(
                           fontFamily: 'Cairo',
                           color: Colors.white,
@@ -468,10 +510,15 @@ class __BodyState extends State<_Body> {
                     ),
                   ),
                   Positioned(
-                    top: 0.0, bottom: 0.0, right: 0.0,
+                    top: 0.0,
+                    bottom: 0.0,
+                    right: 0.0,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.arrow_forward_ios, color: Colors.white,),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -485,7 +532,6 @@ class __BodyState extends State<_Body> {
 }
 
 class _MainItemsDialog extends StatelessWidget {
-
   final List list;
   final Function(int, String) onItemSelected;
 
@@ -494,15 +540,16 @@ class _MainItemsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: List.generate(list.length, (index){
+      children: List.generate(list.length, (index) {
         return GestureDetector(
-          onTap: (){
+          onTap: () {
             onItemSelected(list[index]['id'], list[index]['name']);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(list[index]['name'],
+              Text(
+                list[index]['name'],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Cairo',
@@ -521,7 +568,6 @@ class _MainItemsDialog extends StatelessWidget {
 }
 
 class _SecondaryItemsDialog extends StatelessWidget {
-
   final List list;
   final Function(int, String) onItemSelected;
 
@@ -530,15 +576,16 @@ class _SecondaryItemsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: List.generate(list.length, (index){
+      children: List.generate(list.length, (index) {
         return GestureDetector(
-          onTap: (){
+          onTap: () {
             onItemSelected(list[index]['id'], list[index]['name']);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(list[index]['name'],
+              Text(
+                list[index]['name'],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Cairo',
@@ -557,7 +604,6 @@ class _SecondaryItemsDialog extends StatelessWidget {
 }
 
 class _AreasDialog extends StatelessWidget {
-
   final List list;
   final Function(int, String) onItemSelected;
 
@@ -566,15 +612,16 @@ class _AreasDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: List.generate(list.length, (index){
+      children: List.generate(list.length, (index) {
         return GestureDetector(
-          onTap: (){
+          onTap: () {
             onItemSelected(list[index]['id'], list[index]['name']);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(list[index]['name'],
+              Text(
+                list[index]['name'],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Cairo',
@@ -593,7 +640,6 @@ class _AreasDialog extends StatelessWidget {
 }
 
 class _CitiesDialog extends StatelessWidget {
-
   final List list;
   final Function(int, String) onItemSelected;
 
@@ -602,15 +648,16 @@ class _CitiesDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: List.generate(list.length, (index){
+      children: List.generate(list.length, (index) {
         return GestureDetector(
-          onTap: (){
+          onTap: () {
             onItemSelected(list[index]['id'], list[index]['name']);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(list[index]['name'],
+              Text(
+                list[index]['name'],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Cairo',
@@ -627,4 +674,3 @@ class _CitiesDialog extends StatelessWidget {
     );
   }
 }
-
