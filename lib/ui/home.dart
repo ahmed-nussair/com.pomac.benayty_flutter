@@ -198,6 +198,12 @@ class Home extends StatelessWidget {
                 _secondaryItemIdForAdAdded,
                 areaId: _areaIdForAdAdded,
                 cityId: _cityIdForAdAdded,
+                onSentSuccessfully: () {
+                  BlocProvider.of<HomePageBloc>(
+                      context)
+                      .add(
+                      NavigateToHomePageEvent());
+                },
               )
                                           : Container(),
               bottomNavigationBar: Stack(
