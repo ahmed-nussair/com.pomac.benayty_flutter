@@ -321,8 +321,13 @@ class Home extends StatelessWidget {
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
                         elevation: 100,
-                        onPressed: () => BlocProvider.of<HomePageBloc>(context)
-                            .add(NavigateToAdvertiseAddingPage1()),
+                        onPressed: () {
+                          if (!(state is AddAdvertisementPage1State) &&
+                              !(state is AddAdvertisementPage2State)) {
+                            BlocProvider.of<HomePageBloc>(context)
+                                .add(NavigateToAdvertiseAddingPage1());
+                          }
+                        },
                         child: new Icon(
                           Icons.add,
                           size: 50,
