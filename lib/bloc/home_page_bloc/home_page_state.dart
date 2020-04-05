@@ -38,3 +38,13 @@ class SearchPageState extends HomePageState {
   @override
   List<Object> get props => [];
 }
+
+class AddAdvertisementPage1State extends HomePageState {
+  @override
+  List<Object> get props => [];
+}
+
+class AddAdvertisementPage2State extends HomePageState {
+  @override
+  List<Object> get props => [];
+}

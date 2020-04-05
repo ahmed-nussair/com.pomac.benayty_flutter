@@ -9,6 +9,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'home_pages/add_advertisement_pages/add_advertisement_page_1.dart';
+import 'home_pages/add_advertisement_pages/add_advertisement_page_2.dart';
+
 class Home extends StatelessWidget {
   final _key = GlobalKey<ScaffoldState>();
 
@@ -97,7 +100,9 @@ class Home extends StatelessWidget {
                 ),
               ),
               appBar: AppBar(
-                leading: state is SecondaryPageState
+                leading: state is SecondaryPageState ||
+                        state is AddAdvertisementPage1State ||
+                        state is AddAdvertisementPage2State
                     ? Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
@@ -130,7 +135,11 @@ class Home extends StatelessWidget {
                                   ? 'الرسائل'
                                   : state is NotificationsPageState
                                       ? 'الإشعارات'
-                                      : '',
+                                      : state is AddAdvertisementPage1State ||
+                                              state
+                                                  is AddAdvertisementPage2State
+                                          ? 'إضافة إعلان'
+                                          : '',
                   style: TextStyle(
                     fontFamily: 'Cairo',
                   ),
@@ -159,7 +168,18 @@ class Home extends StatelessWidget {
                               ? NotificationsPage()
                               : state is MessagesPageState
                                   ? MessagesPage()
-                                  : Container(),
+                                  : state is AddAdvertisementPage1State
+                                      ? AddAdvertisementPage1(
+                                          onNextPage: () {
+                                            BlocProvider.of<HomePageBloc>(
+                                                    context)
+                                                .add(
+                                                    NavigateToAdvertiseAddingPage2());
+                                          },
+                                        )
+                                      : state is AddAdvertisementPage2State
+                                          ? AddAdvertisementPage2()
+                                          : Container(),
               bottomNavigationBar: Stack(
                 overflow: Overflow.visible,
                 alignment: FractionalOffset(0.5, 1.0),
@@ -301,7 +321,8 @@ class Home extends StatelessWidget {
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.blue,
                         elevation: 100,
-                        onPressed: () => print('hello world'),
+                        onPressed: () => BlocProvider.of<HomePageBloc>(context)
+                            .add(NavigateToAdvertiseAddingPage1()),
                         child: new Icon(
                           Icons.add,
                           size: 50,

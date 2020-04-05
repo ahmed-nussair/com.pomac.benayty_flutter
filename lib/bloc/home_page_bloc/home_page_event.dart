@@ -33,3 +33,13 @@ class NavigateToSearchPageEvent extends HomePageEvent{
   @override
   List<Object> get props => [];
 }
+
+class NavigateToAdvertiseAddingPage1 extends HomePageEvent{
+  @override
+  List<Object> get props => [];
+}
+
+class NavigateToAdvertiseAddingPage2 extends HomePageEvent{
+  @override
+  List<Object> get props => [];
+}
