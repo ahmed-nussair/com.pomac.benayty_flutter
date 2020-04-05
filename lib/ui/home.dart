@@ -44,6 +44,11 @@ class Home extends StatelessWidget {
     int _mainCategoryId = 0;
     String _mainCategoryTitle = '';
 
+    int _mainItemIdForAdAdded = -1;
+    int _secondaryItemIdForAdAdded = -1;
+    int _areaIdForAdAdded = -1;
+    int _cityIdForAdAdded = -1;
+
     return BlocProvider(
       create: (_) => HomePageBloc()..add(NavigateToHomePageEvent()),
       child: BlocBuilder<HomePageBloc, HomePageState>(
@@ -170,7 +175,16 @@ class Home extends StatelessWidget {
                                   ? MessagesPage()
                                   : state is AddAdvertisementPage1State
                                       ? AddAdvertisementPage1(
-                                          onNextPage: () {
+                onNextPage: (int mainItemId,
+                    int secondaryItemId,
+                    int areaId,
+                    int cityId) {
+                  _mainItemIdForAdAdded = mainItemId;
+                  _secondaryItemIdForAdAdded =
+                      secondaryItemId;
+                  _areaIdForAdAdded = areaId;
+                  _cityIdForAdAdded = cityId;
+
                                             BlocProvider.of<HomePageBloc>(
                                                     context)
                                                 .add(
@@ -178,7 +192,13 @@ class Home extends StatelessWidget {
                                           },
                                         )
                                       : state is AddAdvertisementPage2State
-                                          ? AddAdvertisementPage2()
+                  ? AddAdvertisementPage2(
+                mainItemId: _mainItemIdForAdAdded,
+                secondaryItemId:
+                _secondaryItemIdForAdAdded,
+                areaId: _areaIdForAdAdded,
+                cityId: _cityIdForAdAdded,
+              )
                                           : Container(),
               bottomNavigationBar: Stack(
                 overflow: Overflow.visible,

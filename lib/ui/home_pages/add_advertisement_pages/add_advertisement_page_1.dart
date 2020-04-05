@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddAdvertisementPage1 extends StatelessWidget {
-  final Function onNextPage;
+  final Function(
+      int,
+      int,
+      int,
+      int,
+      ) onNextPage;
 
   AddAdvertisementPage1({@required this.onNextPage});
 
@@ -23,7 +28,7 @@ class AddAdvertisementPage1 extends StatelessWidget {
 }
 
 class _Body extends StatefulWidget {
-  final Function onNextPage;
+  final Function(int, int, int, int) onNextPage;
 
   _Body({@required this.onNextPage});
   @override
@@ -111,7 +116,6 @@ class __BodyState extends State<_Body> {
                                           _secondaryItemName = '';
 
                                           _mainItem = true;
-                                          _secondaryItem = false;
                                         });
 
                                         Navigator.of(context).pop();
@@ -308,7 +312,6 @@ class __BodyState extends State<_Body> {
                                           _cityName = '';
 
                                           _area = true;
-                                          _city = false;
                                         });
 
                                         Navigator.of(context).pop();
@@ -488,7 +491,8 @@ class __BodyState extends State<_Body> {
                     }
                   });
                 } else
-                  widget.onNextPage();
+                  widget.onNextPage(
+                      _mainItemId, _secondaryItemId, _areaId, _cityId);
               },
               child: Stack(
                 children: <Widget>[

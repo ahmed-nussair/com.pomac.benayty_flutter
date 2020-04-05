@@ -5,13 +5,38 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AddAdvertisementPage2 extends StatelessWidget {
+  final int mainItemId;
+  final int secondaryItemId;
+  final int areaId;
+  final int cityId;
+
+  AddAdvertisementPage2({@required this.mainItemId,
+    @required this.secondaryItemId,
+    @required this.areaId,
+    @required this.cityId});
+
   @override
   Widget build(BuildContext context) {
-    return _Body();
+    return _Body(
+      mainItemId: mainItemId,
+      secondaryItemId: secondaryItemId,
+      areaId: areaId,
+      cityId: cityId,
+    );
   }
 }
 
 class _Body extends StatefulWidget {
+  final int mainItemId;
+  final int secondaryItemId;
+  final int areaId;
+  final int cityId;
+
+  _Body({@required this.mainItemId,
+    @required this.secondaryItemId,
+    @required this.areaId,
+    @required this.cityId});
+
   @override
   __BodyState createState() => __BodyState();
 }
@@ -20,7 +45,6 @@ class __BodyState extends State<_Body> {
   final _formKey = GlobalKey<FormState>();
 
   File image;
-
 
   @override
   Widget build(BuildContext context) {
@@ -223,16 +247,15 @@ class __BodyState extends State<_Body> {
                                 ),
                                 child: GestureDetector(
                                     onTap: () async {
-                                      try{
+                                      try {
                                         File _file = await FilePicker.getFile(
-                                            type: FileType.image, fileExtension: '');
+                                            type: FileType.image,
+                                            fileExtension: '');
 
                                         setState(() {
                                           image = _file;
                                         });
-                                      } catch (e){
-
-                                      }
+                                      } catch (e) {}
                                     },
                                     child: Icon(
                                       Icons.add_photo_alternate,
@@ -245,7 +268,9 @@ class __BodyState extends State<_Body> {
                                 bottom: 0.0,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: image == null? Container(): Image.file(image),
+                                  child: image == null
+                                      ? Container()
+                                      : Image.file(image),
                                 ),
                               ),
                             ],
@@ -253,7 +278,6 @@ class __BodyState extends State<_Body> {
                         ],
                       ),
                     ),
-
                   ],
                 ),
               ),
