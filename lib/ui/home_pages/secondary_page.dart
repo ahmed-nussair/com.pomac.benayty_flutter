@@ -8,10 +8,12 @@ import 'package:provider/provider.dart';
 
 class SecondaryPage extends StatelessWidget {
   final int mainCategoryId;
+  final Function(int, int, int, int) onSearch;
   final Function onBackPressed;
 
   SecondaryPage({
     @required this.mainCategoryId,
+    @required this.onSearch,
     @required this.onBackPressed,
   });
 
@@ -23,6 +25,7 @@ class SecondaryPage extends StatelessWidget {
       child: _SecondaryPageBody(
         onBackPressed: onBackPressed,
         mainCategoryId: mainCategoryId,
+        onSearch: onSearch,
       ),
     );
   }
@@ -31,11 +34,12 @@ class SecondaryPage extends StatelessWidget {
 class _SecondaryPageBody extends StatelessWidget {
   final int mainCategoryId;
   final Function onBackPressed;
+  final Function(int, int, int, int) onSearch;
 
   final _secondaryPageBloc = SecondaryCategoriesPageBloc();
 
   _SecondaryPageBody(
-      {@required this.mainCategoryId, @required this.onBackPressed});
+      {@required this.mainCategoryId, @required this.onSearch, @required this.onBackPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +51,6 @@ class _SecondaryPageBody extends StatelessWidget {
     String _itemName = '';
     String _areaName = '';
     String _cityName = '';
-
-
 
     return WillPopScope(
       onWillPop: () {
@@ -91,9 +93,11 @@ class _SecondaryPageBody extends StatelessWidget {
                                       content: _SecondaryItems(
                                         mainCategoryId: mainCategoryId,
                                         list: list,
-                                        onItemSelected: (value) {
+                                        onItemSelected: (id, value) {
+                                          _itemId = id;
                                           _itemName = value;
                                           _areaId = -1;
+                                          _cityId = -1;
                                           _areaName = '';
                                           _cityName = '';
                                           _secondaryPageBloc.add(SelectSecondaryItemEvent());
@@ -156,6 +160,7 @@ class _SecondaryPageBody extends StatelessWidget {
                                         onItemSelected: (id, value) {
                                           _areaId = id;
                                           _areaName = value;
+                                          _cityId = -1;
                                           _cityName = '';
                                           if(state is SecondaryItemSelectedState){
                                             _secondaryPageBloc.add(SelectSecondaryItemAndAreaEvent());
@@ -220,7 +225,8 @@ class _SecondaryPageBody extends StatelessWidget {
                                         content: _CityItems(
                                           mainCategoryId: mainCategoryId,
                                           list: list,
-                                          onItemSelected: (value) {
+                                          onItemSelected: (id, value) {
+                                            _cityId = id;
                                             _cityName = value;
                                             if(state is SecondaryItemAndAreaSelectedState){
                                               _secondaryPageBloc.add(SelectSecondaryItemAndAreaAndCityEvent());
@@ -268,7 +274,7 @@ class _SecondaryPageBody extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: GestureDetector(
                         onTap: (){
-
+                          onSearch(mainCategoryId, _itemId, _areaId, _cityId);
                         },
                         child: Container(
                           alignment: Alignment.topCenter,
@@ -304,7 +310,7 @@ class _SecondaryItems extends StatelessWidget {
 
   final int mainCategoryId;
   final List list;
-  final Function(String) onItemSelected;
+  final Function(int, String) onItemSelected;
 
   _SecondaryItems({@required this.mainCategoryId, @required this.list, @required this.onItemSelected});
 
@@ -314,7 +320,7 @@ class _SecondaryItems extends StatelessWidget {
       children: List.generate(list.length, (index){
         return GestureDetector(
           onTap: (){
-            onItemSelected(list[index]['name']);
+            onItemSelected(list[index]['id'], list[index]['name']);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -378,7 +384,7 @@ class _CityItems extends StatelessWidget {
 
   final int mainCategoryId;
   final List list;
-  final Function(String) onItemSelected;
+  final Function(int, String) onItemSelected;
 
   _CityItems({@required this.mainCategoryId, @required this.list, @required this.onItemSelected});
 
@@ -388,7 +394,7 @@ class _CityItems extends StatelessWidget {
       children: List.generate(list.length, (index){
         return GestureDetector(
           onTap: (){
-            onItemSelected(list[index]['name']);
+            onItemSelected(list[index]['id'], list[index]['name']);
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

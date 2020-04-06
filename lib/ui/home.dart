@@ -2,6 +2,7 @@ import 'package:benayty/bloc/home_page_bloc/bloc.dart';
 import 'package:benayty/ui/home_pages/home_page.dart';
 import 'package:benayty/ui/home_pages/messages_page.dart';
 import 'package:benayty/ui/home_pages/notifications_page.dart';
+import 'package:benayty/ui/home_pages/search_page.dart';
 import 'package:benayty/ui/home_pages/secondary_page.dart';
 import 'package:benayty/ui/home_pages/wishlist_page.dart';
 import 'package:benayty/ui/my_icons.dart';
@@ -48,6 +49,11 @@ class Home extends StatelessWidget {
     int _secondaryItemIdForAdAdded = -1;
     int _areaIdForAdAdded = -1;
     int _cityIdForAdAdded = -1;
+
+    int _mainItemIdForSearch = -1;
+    int _secondaryItemIdForSearch = -1;
+    int _areaIdForSearch = -1;
+    int _cityIdForSearch = -1;
 
     return BlocProvider(
       create: (_) => HomePageBloc()..add(NavigateToHomePageEvent()),
@@ -144,7 +150,9 @@ class Home extends StatelessWidget {
                                               state
                                                   is AddAdvertisementPage2State
                                           ? 'إضافة إعلان'
-                                          : '',
+                      : state is SearchPageState
+                      ? 'نتائج البحث'
+                      : '',
                   style: TextStyle(
                     fontFamily: 'Cairo',
                   ),
@@ -162,50 +170,69 @@ class Home extends StatelessWidget {
                     )
                   : state is WishListPageState
                       ? WishListPage()
-                      : state is SecondaryPageState
-                          ? SecondaryPage(
-                              mainCategoryId: _mainCategoryId,
-                              onBackPressed: () =>
-                                  BlocProvider.of<HomePageBloc>(context)
-                                      .add(NavigateToHomePageEvent()),
-                            )
-                          : state is NotificationsPageState
-                              ? NotificationsPage()
-                              : state is MessagesPageState
-                                  ? MessagesPage()
-                                  : state is AddAdvertisementPage1State
-                                      ? AddAdvertisementPage1(
+                  : state is SearchPageState
+                  ? SearchPage(
+                mainItemId: _mainItemIdForSearch,
+                secondaryItemId: _secondaryItemIdForSearch,
+                areaId: _areaIdForSearch,
+                cityId: _cityIdForSearch,
+              )
+                  : state is SecondaryPageState
+                  ? SecondaryPage(
+                mainCategoryId: _mainCategoryId,
+                onSearch:
+                    (mainId, secondaryId, areaId, cityId) {
+                  _mainItemIdForSearch = mainId;
+                  _secondaryItemIdForSearch = secondaryId;
+                  _areaIdForSearch = areaId;
+                  _cityIdForSearch = cityId;
+                  BlocProvider.of<HomePageBloc>(context)
+                      .add(NavigateToSearchPageEvent());
+                },
+                onBackPressed: () =>
+                    BlocProvider.of<HomePageBloc>(context)
+                        .add(NavigateToHomePageEvent()),
+              )
+                  : state is NotificationsPageState
+                  ? NotificationsPage()
+                  : state is MessagesPageState
+                  ? MessagesPage()
+                  : state is AddAdvertisementPage1State
+                  ? AddAdvertisementPage1(
                 onNextPage: (int mainItemId,
                     int secondaryItemId,
                     int areaId,
                     int cityId) {
-                  _mainItemIdForAdAdded = mainItemId;
+                  _mainItemIdForAdAdded =
+                      mainItemId;
                   _secondaryItemIdForAdAdded =
                       secondaryItemId;
                   _areaIdForAdAdded = areaId;
                   _cityIdForAdAdded = cityId;
 
-                                            BlocProvider.of<HomePageBloc>(
-                                                    context)
-                                                .add(
-                                                    NavigateToAdvertiseAddingPage2());
-                                          },
-                                        )
-                                      : state is AddAdvertisementPage2State
+                  BlocProvider.of<HomePageBloc>(
+                      context)
+                      .add(
+                      NavigateToAdvertiseAddingPage2());
+                },
+              )
+                  : state is AddAdvertisementPage2State
                   ? AddAdvertisementPage2(
-                mainItemId: _mainItemIdForAdAdded,
+                mainItemId:
+                _mainItemIdForAdAdded,
                 secondaryItemId:
                 _secondaryItemIdForAdAdded,
                 areaId: _areaIdForAdAdded,
                 cityId: _cityIdForAdAdded,
                 onSentSuccessfully: () {
-                  BlocProvider.of<HomePageBloc>(
+                  BlocProvider.of<
+                      HomePageBloc>(
                       context)
                       .add(
                       NavigateToHomePageEvent());
                 },
               )
-                                          : Container(),
+                  : Container(),
               bottomNavigationBar: Stack(
                 overflow: Overflow.visible,
                 alignment: FractionalOffset(0.5, 1.0),
