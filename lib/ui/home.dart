@@ -44,6 +44,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     int _mainCategoryId = 0;
     String _mainCategoryTitle = '';
+    String _adName = '';
 
     int _mainItemIdForAdAdded = -1;
     int _secondaryItemIdForAdAdded = -1;
@@ -152,6 +153,8 @@ class Home extends StatelessWidget {
                                           ? 'إضافة إعلان'
                       : state is SearchPageState
                       ? 'نتائج البحث'
+                      : state is AdDescriptionState
+                      ? _adName
                       : '',
                   style: TextStyle(
                     fontFamily: 'Cairo',

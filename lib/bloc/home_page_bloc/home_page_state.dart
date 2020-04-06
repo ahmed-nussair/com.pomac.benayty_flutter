@@ -48,3 +48,8 @@ class AddAdvertisementPage2State extends HomePageState {
   @override
   List<Object> get props => [];
 }
+
+class AdDescriptionState extends HomePageState {
+  @override
+  List<Object> get props => [];
+}

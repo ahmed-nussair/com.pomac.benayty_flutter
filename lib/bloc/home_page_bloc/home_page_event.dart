@@ -43,3 +43,8 @@ class NavigateToAdvertiseAddingPage2 extends HomePageEvent{
   @override
   List<Object> get props => [];
 }
+
+class NavigateToAdDescription extends HomePageEvent {
+  @override
+  List<Object> get props => [];
+}

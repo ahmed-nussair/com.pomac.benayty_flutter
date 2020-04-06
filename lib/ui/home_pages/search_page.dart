@@ -54,26 +54,45 @@ class _Body extends StatelessWidget {
           .filterAdvertisements(mainItemId, secondaryItemId, areaId, cityId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          if (!snapshot.data.isSuccessful) {
+            return Center(
+              child: Text('حدث خطأ',
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 20,
+                ),
+              ),
+            );
+          }
           final data = json.decode(snapshot.data.bodyString);
           print(data);
           final List list = data['data'];
-          return CustomScrollView(
+          return list != null && list.length > 0 ? CustomScrollView(
             slivers: <Widget>[
               SliverPadding(
                 padding: EdgeInsets.all(8.0),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate(
                       List.generate(list.length, (index) {
-                    return AdItem(
-                      title: list[index]['title'],
-                      createdAt: list[index]['created_at'],
-                      imagePath: list[index]['imagePath'],
-                      userName: list[index]['user']['name'],
-                    );
-                  })),
+                        return AdItem(
+                          title: list[index]['title'],
+                          createdAt: list[index]['created_at'],
+                          imagePath: list[index]['imagePath'],
+                          userName: list[index]['user']['name'],
+                        );
+                      })),
                 ),
               )
             ],
+          ) : Center(
+            child: Text(
+              'لا يوجد نتائج',
+              style: TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 20.0,
+                color: Color(0xff1f80a9),
+              ),
+            ),
           );
         }
         return Container(

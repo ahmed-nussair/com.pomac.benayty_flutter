@@ -26,6 +26,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       yield AddAdvertisementPage1State();
     } else if (event is NavigateToAdvertiseAddingPage2){
       yield AddAdvertisementPage2State();
+    } else if (event is NavigateToAdDescription) {
+      yield AdDescriptionState();
     } else {
       yield InitialHomePageState();
     }

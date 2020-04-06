@@ -2,6 +2,8 @@ import 'package:benayty/ui/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'dart:async';
+
 import 'home.dart';
 import 'login.dart';
 
@@ -37,8 +39,11 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     _animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.linear))
     ..addStatusListener((status){
       if(status == AnimationStatus.completed){
-        _scaleController.forward();
-        _paddingController.forward();
+        Timer(Duration(seconds: 1), () =>
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Home())));
+//        _scaleController.forward();
+//        _paddingController.forward();
       }
     });
     
