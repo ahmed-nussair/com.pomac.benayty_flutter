@@ -26,16 +26,10 @@ class AdDescription extends StatelessWidget {
   }
 }
 
-class _Body extends StatefulWidget {
+class _Body extends StatelessWidget {
+
   final int adId;
 
-  _Body({@required this.adId});
-
-  @override
-  __BodyState createState() => __BodyState();
-}
-
-class __BodyState extends State<_Body> {
   final _addIcons = [
     Icons.favorite,
     Icons.comment,
@@ -43,13 +37,13 @@ class __BodyState extends State<_Body> {
     MyIcons.comment,
   ];
 
-  final _commentTextController = TextEditingController();
+  _Body({@required this.adId});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Response>(
       future: Provider.of<AdvertisementService>(context)
-          .showAdvertisement(widget.adId),
+          .showAdvertisement(adId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (!snapshot.data.isSuccessful) {
@@ -246,20 +240,62 @@ class __BodyState extends State<_Body> {
                                   ),
                                 ),
                               ),
-                              TextFormField(
-                                textAlign: TextAlign.end,
-                                maxLines: 4,
-                                controller: _commentTextController,
-                                keyboardType: TextInputType.multiline,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(context: context,
+                                    child: AlertDialog(
+                                      title: _AddingComment(),
+                                      actions: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('إلغاء',
+                                              style: TextStyle(
+                                                fontFamily: 'Cairo',
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('أضف التعليق',
+                                              style: TextStyle(
+                                                fontFamily: 'Cairo',
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Colors.grey,
+                                    ),
                                   ),
-                                  hintText: 'اكتب تعليقاً',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Cairo',
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 8.0,
+                                      left: 8.0,
+                                      top: 8.0,
+                                      bottom: 20.0,),
+                                    child: Text('اكتب تعليقًا',
+                                      style: TextStyle(
+                                        fontFamily: 'Cairo',
+                                      ),
+                                    ),
                                   ),
-                                  contentPadding: EdgeInsets.all(5.0),
                                 ),
                               ),
                             ],
@@ -345,3 +381,61 @@ class __BodyState extends State<_Body> {
     );
   }
 }
+
+class _AddingComment extends StatefulWidget {
+  @override
+  _AddingCommentState createState() => _AddingCommentState();
+}
+
+class _AddingCommentState extends State<_AddingComment> {
+
+  final _commentTextController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: ListTile(
+        trailing: CircleAvatar(
+          backgroundImage: AssetImage('assets/testad.png'),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'محمد حسن الراعي',
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  color: Color(0xff1f80a9),
+                ),
+              ),
+            ),
+            TextFormField(
+              textAlign: TextAlign.end,
+              maxLines: 4,
+              controller: _commentTextController,
+              keyboardType: TextInputType.multiline,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                hintText: 'اكتب تعليقاً',
+                hintStyle: TextStyle(
+                  fontFamily: 'Cairo',
+                ),
+                contentPadding: EdgeInsets.all(5.0),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
