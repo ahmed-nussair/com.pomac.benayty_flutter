@@ -53,3 +53,8 @@ class AdDescriptionState extends HomePageState {
   @override
   List<Object> get props => [];
 }
+
+class ContactUsState extends HomePageState {
+  @override
+  List<Object> get props => [];
+}

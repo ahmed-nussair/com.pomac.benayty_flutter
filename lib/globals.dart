@@ -6,6 +6,15 @@ import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 
 class Globals {
+
+  static Future<bool> isImageUrlWell(String imageUrl) async {
+    var response = await http.get(imageUrl,);
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
+  }
+
   static Future<Map> addAdvertisement({
     String token,
     int mainItemId,
@@ -20,7 +29,7 @@ class Globals {
     try {
       // string to uri
       var uri =
-          Uri.parse('https://pomac.info/benaity/public/api/advertisements/add');
+      Uri.parse('https://pomac.info/benaity/public/api/advertisements/add');
 
       // create multipart request
       var request = http.MultipartRequest("POST", uri);

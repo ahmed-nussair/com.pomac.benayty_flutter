@@ -13,12 +13,14 @@ class SearchPage extends StatelessWidget {
   final int secondaryItemId;
   final int areaId;
   final int cityId;
+  final Function(int, String) onItemSelected;
 
   SearchPage(
       {@required this.mainItemId,
       @required this.secondaryItemId,
       @required this.areaId,
-      @required this.cityId});
+        @required this.cityId,
+        @required this.onItemSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class SearchPage extends StatelessWidget {
         areaId: areaId,
         secondaryItemId: secondaryItemId,
         mainItemId: mainItemId,
+        onItemSelected: onItemSelected,
       ),
     );
   }
@@ -40,11 +43,13 @@ class _Body extends StatelessWidget {
   final int secondaryItemId;
   final int areaId;
   final int cityId;
+  final Function(int, String) onItemSelected;
 
   _Body(
       {@required this.mainItemId,
       @required this.secondaryItemId,
       @required this.areaId,
+        @required this.onItemSelected,
       @required this.cityId});
 
   @override
@@ -65,7 +70,7 @@ class _Body extends StatelessWidget {
             );
           }
           final data = json.decode(snapshot.data.bodyString);
-          print(data);
+//          print(data);
           final List list = data['data'];
           return list != null && list.length > 0 ? CustomScrollView(
             slivers: <Widget>[
@@ -74,11 +79,17 @@ class _Body extends StatelessWidget {
                 sliver: SliverList(
                   delegate: SliverChildListDelegate(
                       List.generate(list.length, (index) {
-                        return AdItem(
-                          title: list[index]['title'],
-                          createdAt: list[index]['created_at'],
-                          imagePath: list[index]['imagePath'],
-                          userName: list[index]['user']['name'],
+                        return GestureDetector(
+                          onTap: () {
+                            onItemSelected(
+                                list[index]['id'], list[index]['title']);
+                          },
+                          child: AdItem(
+                            title: list[index]['title'],
+                            createdAt: list[index]['created_at'],
+                            imagePath: list[index]['imagePath'],
+                            userName: list[index]['user']['name'],
+                          ),
                         );
                       })),
                 ),

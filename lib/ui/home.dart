@@ -10,8 +10,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'home_pages/ad_description.dart';
 import 'home_pages/add_advertisement_pages/add_advertisement_page_1.dart';
 import 'home_pages/add_advertisement_pages/add_advertisement_page_2.dart';
+import 'home_pages/contact_us.dart';
 
 class Home extends StatelessWidget {
   final _key = GlobalKey<ScaffoldState>();
@@ -56,6 +58,10 @@ class Home extends StatelessWidget {
     int _areaIdForSearch = -1;
     int _cityIdForSearch = -1;
 
+    int _adId = -1;
+
+    HomePageEvent _previousEvent = NavigateToHomePageEvent();
+
     return BlocProvider(
       create: (_) => HomePageBloc()..add(NavigateToHomePageEvent()),
       child: BlocBuilder<HomePageBloc, HomePageState>(
@@ -79,6 +85,8 @@ class Home extends StatelessWidget {
               Navigator.of(context).pop();
             }),
             _drawerItem(Icons.phone, 'اتصل بنا', () {
+              BlocProvider.of<HomePageBloc>(context)
+                  .add(NavigateToContactUsPage());
               Navigator.of(context).pop();
             }),
             _drawerItem(Icons.exit_to_app, 'تسجيل خروج', () {
@@ -123,6 +131,16 @@ class Home extends StatelessWidget {
                               .add(NavigateToHomePageEvent()),
                         ),
                       )
+                    : state is AdDescriptionState
+                    ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Icon(Icons.arrow_back_ios),
+                    onTap: () =>
+                        BlocProvider.of<HomePageBloc>(context)
+                            .add(_previousEvent),
+                  ),
+                )
                     : Container(),
                 actions: <Widget>[
                   Padding(
@@ -143,14 +161,16 @@ class Home extends StatelessWidget {
                           ? _mainCategoryTitle
                           : state is WishListPageState
                               ? 'المفضلة'
-                              : state is MessagesPageState
-                                  ? 'الرسائل'
-                                  : state is NotificationsPageState
-                                      ? 'الإشعارات'
-                                      : state is AddAdvertisementPage1State ||
-                                              state
-                                                  is AddAdvertisementPage2State
-                                          ? 'إضافة إعلان'
+                      : state is ContactUsState
+                      ? 'اتصل بنا'
+                      : state is MessagesPageState
+                      ? 'الرسائل'
+                      : state is NotificationsPageState
+                      ? 'الإشعارات'
+                      : state is AddAdvertisementPage1State ||
+                      state
+                      is AddAdvertisementPage2State
+                      ? 'إضافة إعلان'
                       : state is SearchPageState
                       ? 'نتائج البحث'
                       : state is AdDescriptionState
@@ -173,18 +193,28 @@ class Home extends StatelessWidget {
                     )
                   : state is WishListPageState
                       ? WishListPage()
+                  : state is ContactUsState
+                  ? ContactUs()
                   : state is SearchPageState
                   ? SearchPage(
                 mainItemId: _mainItemIdForSearch,
                 secondaryItemId: _secondaryItemIdForSearch,
                 areaId: _areaIdForSearch,
                 cityId: _cityIdForSearch,
+                onItemSelected: (id, title) {
+                  _adId = id;
+                  _adName = title;
+                  _previousEvent =
+                      NavigateToSearchPageEvent();
+                  BlocProvider.of<HomePageBloc>(context)
+                      .add(NavigateToAdDescription());
+                },
               )
                   : state is SecondaryPageState
                   ? SecondaryPage(
                 mainCategoryId: _mainCategoryId,
-                onSearch:
-                    (mainId, secondaryId, areaId, cityId) {
+                onSearch: (mainId, secondaryId, areaId,
+                    cityId) {
                   _mainItemIdForSearch = mainId;
                   _secondaryItemIdForSearch = secondaryId;
                   _areaIdForSearch = areaId;
@@ -213,7 +243,8 @@ class Home extends StatelessWidget {
                   _areaIdForAdAdded = areaId;
                   _cityIdForAdAdded = cityId;
 
-                  BlocProvider.of<HomePageBloc>(
+                  BlocProvider.of<
+                      HomePageBloc>(
                       context)
                       .add(
                       NavigateToAdvertiseAddingPage2());
@@ -234,6 +265,10 @@ class Home extends StatelessWidget {
                       .add(
                       NavigateToHomePageEvent());
                 },
+              )
+                  : state is AdDescriptionState
+                  ? AdDescription(
+                adId: _adId,
               )
                   : Container(),
               bottomNavigationBar: Stack(
