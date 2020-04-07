@@ -145,6 +145,8 @@ class __BodyState extends State<_Body> {
                     width: MediaQuery.of(context).size.width,
                     child: ListView(
                       children: <Widget>[
+
+                        // Ad Description
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
@@ -156,6 +158,8 @@ class __BodyState extends State<_Body> {
                             textAlign: TextAlign.end,
                           ),
                         ),
+
+                        // Ad image
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ClipRRect(
@@ -165,6 +169,8 @@ class __BodyState extends State<_Body> {
                             ),
                           ),
                         ),
+
+                        // Ad buttons
                         Padding(
                           padding: const EdgeInsets.only(
                             left: 40.0,
@@ -195,6 +201,8 @@ class __BodyState extends State<_Body> {
                             }),
                           ),
                         ),
+
+                        // Comments title
                         Container(
                           alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(10.0),
@@ -219,6 +227,8 @@ class __BodyState extends State<_Body> {
                             ],
                           ),
                         ),
+
+                        // To add a comment
                         ListTile(
                           trailing: CircleAvatar(
                             backgroundImage: AssetImage('assets/testad.png'),
@@ -255,6 +265,8 @@ class __BodyState extends State<_Body> {
                             ],
                           ),
                         ),
+
+                        // comments
                         Column(
                           children: List.generate(commentsList.length, (index) {
                             return ListTile(
