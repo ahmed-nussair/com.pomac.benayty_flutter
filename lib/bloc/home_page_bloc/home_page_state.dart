@@ -58,3 +58,8 @@ class ContactUsState extends HomePageState {
   @override
   List<Object> get props => [];
 }
+
+class ChattingPageState extends HomePageState {
+  @override
+  List<Object> get props => [];
+}

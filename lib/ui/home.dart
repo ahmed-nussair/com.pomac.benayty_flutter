@@ -1,4 +1,5 @@
 import 'package:benayty/bloc/home_page_bloc/bloc.dart';
+import 'package:benayty/ui/home_pages/chatting_page.dart';
 import 'package:benayty/ui/home_pages/home_page.dart';
 import 'package:benayty/ui/home_pages/messages_page.dart';
 import 'package:benayty/ui/home_pages/notifications_page.dart';
@@ -59,6 +60,9 @@ class Home extends StatelessWidget {
     int _cityIdForSearch = -1;
 
     int _adId = -1;
+
+    String _userIdForChatting = '';
+    String _userNameForChatting = '';
 
     HomePageEvent _previousEvent = NavigateToHomePageEvent();
 
@@ -141,6 +145,16 @@ class Home extends StatelessWidget {
                             .add(_previousEvent),
                   ),
                 )
+                    : state is ChattingPageState
+                    ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Icon(Icons.arrow_back_ios),
+                    onTap: () =>
+                        BlocProvider.of<HomePageBloc>(context)
+                            .add(_previousEvent),
+                  ),
+                )
                     : Container(),
                 actions: <Widget>[
                   Padding(
@@ -165,6 +179,8 @@ class Home extends StatelessWidget {
                       ? 'اتصل بنا'
                       : state is MessagesPageState
                       ? 'الرسائل'
+                      : state is ChattingPageState
+                      ? _userNameForChatting
                       : state is NotificationsPageState
                       ? 'الإشعارات'
                       : state is AddAdvertisementPage1State ||
@@ -229,7 +245,18 @@ class Home extends StatelessWidget {
                   : state is NotificationsPageState
                   ? NotificationsPage()
                   : state is MessagesPageState
-                  ? MessagesPage()
+                  ? MessagesPage(
+                onChatting: (userId, userName) {
+                  _userIdForChatting = userId;
+                  _userNameForChatting = userName;
+                  _previousEvent =
+                      NavigateToMessagesPageEvent();
+                  BlocProvider.of<HomePageBloc>(
+                      context)
+                      .add(
+                      NavigateToChattingPageEvent());
+                },
+              )
                   : state is AddAdvertisementPage1State
                   ? AddAdvertisementPage1(
                 onNextPage: (int mainItemId,
@@ -269,6 +296,11 @@ class Home extends StatelessWidget {
                   : state is AdDescriptionState
                   ? AdDescription(
                 adId: _adId,
+              )
+                  : state is ChattingPageState
+                  ? ChattingPage(
+                userId:
+                _userIdForChatting,
               )
                   : Container(),
               bottomNavigationBar: Stack(

@@ -53,3 +53,8 @@ class NavigateToContactUsPage extends HomePageEvent {
   @override
   List<Object> get props => [];
 }
+
+class NavigateToChattingPageEvent extends HomePageEvent {
+  @override
+  List<Object> get props => [];
+}

@@ -302,8 +302,7 @@ class __BodyState extends State<_Body> {
                                           try {
                                             File _file = await FilePicker
                                                 .getFile(
-                                                type: FileType.image,
-                                                fileExtension: '');
+                                              type: FileType.image,);
 
                                             setState(() {
                                               _image = _file;

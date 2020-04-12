@@ -28,6 +28,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       yield AddAdvertisementPage2State();
     } else if (event is NavigateToAdDescription) {
       yield AdDescriptionState();
+    } else if (event is NavigateToChattingPageEvent) {
+      yield ChattingPageState();
     } else if (event is NavigateToContactUsPage) {
       yield ContactUsState();
     } else {
