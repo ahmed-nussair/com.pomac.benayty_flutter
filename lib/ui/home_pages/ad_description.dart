@@ -11,8 +11,9 @@ import 'package:benayty/chopper/advertisement_service.dart';
 
 class AdDescription extends StatelessWidget {
   final int adId;
+  final Function(String, String) onMessage;
 
-  AdDescription({@required this.adId});
+  AdDescription({@required this.adId, @required this.onMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,7 @@ class AdDescription extends StatelessWidget {
       dispose: (_, AdvertisementService service) => service.client.dispose(),
       child: _Body(
         adId: adId,
+        onMessage: onMessage,
       ),
     );
   }
@@ -29,33 +31,38 @@ class AdDescription extends StatelessWidget {
 class _Body extends StatelessWidget {
 
   final int adId;
+  final Function(String, String) onMessage;
 
+  _Body({@required this.adId, @required this.onMessage});
 
-
-  _Body({@required this.adId});
-
+  Widget _adButton(IconData icon, Function function) {
+    return Container(
+      padding: EdgeInsets.only(
+        top: 8.0,
+        bottom: 8.0,
+        left: 20.0,
+        right: 20.0,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Color(0xff1f80a9),
+          width: 1,
+        ),
+      ),
+      child: GestureDetector(
+        onTap: () {
+          function();
+        },
+        child: Icon(
+          icon,
+          color: Color(0xff1f80a9),
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
-    final List<Map<IconData, Function>> _adIcons = [
-      {Icons.favorite: () async {
-        final response = await Provider.of<AdvertisementService>(
-            context, listen: false).addToWishList({
-          'token': Globals.token,
-          'advertisement_id': '$adId',
-        });
-
-        print(response.bodyString);
-      }},
-      {Icons.comment: () {
-        print('Comment Icon Clicked');
-      }},
-      {Icons.share: () {
-        print('Share Icon Clicked');
-      }},
-      {MyIcons.comment: () {
-        print('Message Icon Clicked');
-      }},
-    ];
 
     return FutureBuilder<Response>(
       future: Provider.of<AdvertisementService>(context)
@@ -188,32 +195,78 @@ class _Body extends StatelessWidget {
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: List.generate(_adIcons.length, (index) {
-                              return Container(
-                                padding: EdgeInsets.only(
-                                  top: 8.0,
-                                  bottom: 8.0,
-                                  left: 20.0,
-                                  right: 20.0,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: Color(0xff1f80a9),
-                                    width: 1,
+                            children: [
+                              _adButton(Icons.favorite, () async {
+                                final response = await Provider.of<
+                                    AdvertisementService>(
+                                    context, listen: false).addToWishList({
+                                  'token': Globals.token,
+                                  'advertisement_id': '$adId',
+                                });
+
+                                final data = json.decode(response.bodyString);
+                                String _result = '';
+                                bool done = false;
+                                if (data['status'] == 200) {
+                                  _result = data['message'];
+                                  done = true;
+                                } else {
+                                  _result = data['errors'][0];
+                                }
+
+                                showDialog(context: context,
+                                  child: AlertDialog(
+
+                                    title: Stack(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(15.0),
+                                          child: Text(_result,
+                                            style: TextStyle(
+                                              fontFamily: 'Cairo',
+                                              color: Color(0xff1f80a9),
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          right: 0.0, top: 0.0,
+                                          child: done ? CircleAvatar(
+                                            backgroundColor: Colors.green,
+                                            child: Icon(
+                                              Icons.done, color: Colors.white,),
+                                          ) : CircleAvatar(
+                                            backgroundColor: Colors.red,
+                                            child: Icon(Icons.clear,
+                                              color: Colors.white,),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    actions: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('إغلاق',),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _adIcons[index].values.toList()[0]();
-                                  },
-                                  child: Icon(
-                                    _adIcons[index].keys.toList()[0],
-                                    color: Color(0xff1f80a9),
-                                  ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
+                              _adButton(Icons.comment, () {
+                                print('Comment Icon Clicked');
+                              },),
+                              _adButton(Icons.share, () {
+                                print('Share Icon Clicked');
+                              }),
+                              _adButton(MyIcons.comment, () {
+                                onMessage(
+                                    '${data['user_id']}', data['user']['name']);
+                              },),
+                            ],
                           ),
                         ),
 

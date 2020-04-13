@@ -32,4 +32,5 @@ class _$WishListService extends WishListService {
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
   }
+
 }

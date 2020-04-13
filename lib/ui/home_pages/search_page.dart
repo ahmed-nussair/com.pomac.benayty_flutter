@@ -79,17 +79,15 @@ class _Body extends StatelessWidget {
                 sliver: SliverList(
                   delegate: SliverChildListDelegate(
                       List.generate(list.length, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            onItemSelected(
-                                list[index]['id'], list[index]['title']);
+                        return AdItem(
+                          id: list[index]['id'],
+                          title: list[index]['title'],
+                          createdAt: list[index]['created_at'],
+                          imagePath: list[index]['imagePath'],
+                          userName: list[index]['user']['name'],
+                          onItemClicked: (value) {
+                            onItemSelected(value, list[index]['title']);
                           },
-                          child: AdItem(
-                            title: list[index]['title'],
-                            createdAt: list[index]['created_at'],
-                            imagePath: list[index]['imagePath'],
-                            userName: list[index]['user']['name'],
-                          ),
                         );
                       })),
                 ),

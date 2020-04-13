@@ -64,8 +64,6 @@ class Home extends StatelessWidget {
     String _userIdForChatting = '';
     String _userNameForChatting = '';
 
-    HomePageEvent _previousEvent = NavigateToHomePageEvent();
-
     return BlocProvider(
       create: (_) => HomePageBloc()..add(NavigateToHomePageEvent()),
       child: BlocBuilder<HomePageBloc, HomePageState>(
@@ -142,7 +140,7 @@ class Home extends StatelessWidget {
                     child: Icon(Icons.arrow_back_ios),
                     onTap: () =>
                         BlocProvider.of<HomePageBloc>(context)
-                            .add(_previousEvent),
+                            .add(EventsStack.pop()),
                   ),
                 )
                     : state is ChattingPageState
@@ -152,7 +150,7 @@ class Home extends StatelessWidget {
                     child: Icon(Icons.arrow_back_ios),
                     onTap: () =>
                         BlocProvider.of<HomePageBloc>(context)
-                            .add(_previousEvent),
+                            .add(EventsStack.pop()),
                   ),
                 )
                     : Container(),
@@ -212,7 +210,7 @@ class Home extends StatelessWidget {
                 onItemClicked: (id, title) {
                   _adId = id;
                   _adName = title;
-                  _previousEvent = NavigateToWishListPageEvent();
+                  EventsStack.push(NavigateToWishListPageEvent());
                   BlocProvider.of<HomePageBloc>(context)
                       .add(NavigateToAdDescription());
                 },
@@ -228,8 +226,7 @@ class Home extends StatelessWidget {
                 onItemSelected: (id, title) {
                   _adId = id;
                   _adName = title;
-                  _previousEvent =
-                      NavigateToSearchPageEvent();
+                  EventsStack.push(NavigateToSearchPageEvent());
                   BlocProvider.of<HomePageBloc>(context)
                       .add(NavigateToAdDescription());
                 },
@@ -257,8 +254,7 @@ class Home extends StatelessWidget {
                 onChatting: (userId, userName) {
                   _userIdForChatting = userId;
                   _userNameForChatting = userName;
-                  _previousEvent =
-                      NavigateToMessagesPageEvent();
+                  EventsStack.push(NavigateToMessagesPageEvent());
                   BlocProvider.of<HomePageBloc>(
                       context)
                       .add(
@@ -304,6 +300,19 @@ class Home extends StatelessWidget {
                   : state is AdDescriptionState
                   ? AdDescription(
                 adId: _adId,
+                onMessage: (userId,
+                    userName) {
+                  _userIdForChatting =
+                      userId;
+                  _userNameForChatting =
+                      userName;
+                  EventsStack.push(NavigateToAdDescription());
+                  BlocProvider.of<
+                      HomePageBloc>(
+                      context)
+                      .add(
+                      NavigateToChattingPageEvent());
+                },
               )
                   : state is ChattingPageState
                   ? ChattingPage(
