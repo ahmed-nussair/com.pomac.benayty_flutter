@@ -30,17 +30,33 @@ class _Body extends StatelessWidget {
 
   final int adId;
 
-  final _addIcons = [
-    Icons.favorite,
-    Icons.comment,
-    Icons.share,
-    MyIcons.comment,
-  ];
+
 
   _Body({@required this.adId});
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<IconData, Function>> _adIcons = [
+      {Icons.favorite: () async {
+        final response = await Provider.of<AdvertisementService>(
+            context, listen: false).addToWishList({
+          'token': Globals.token,
+          'advertisement_id': '$adId',
+        });
+
+        print(response.bodyString);
+      }},
+      {Icons.comment: () {
+        print('Comment Icon Clicked');
+      }},
+      {Icons.share: () {
+        print('Share Icon Clicked');
+      }},
+      {MyIcons.comment: () {
+        print('Message Icon Clicked');
+      }},
+    ];
+
     return FutureBuilder<Response>(
       future: Provider.of<AdvertisementService>(context)
           .showAdvertisement(adId),
@@ -172,7 +188,7 @@ class _Body extends StatelessWidget {
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: List.generate(_addIcons.length, (index) {
+                            children: List.generate(_adIcons.length, (index) {
                               return Container(
                                 padding: EdgeInsets.only(
                                   top: 8.0,
@@ -187,9 +203,14 @@ class _Body extends StatelessWidget {
                                     width: 1,
                                   ),
                                 ),
-                                child: Icon(
-                                  _addIcons[index],
-                                  color: Color(0xff1f80a9),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _adIcons[index].values.toList()[0]();
+                                  },
+                                  child: Icon(
+                                    _adIcons[index].keys.toList()[0],
+                                    color: Color(0xff1f80a9),
+                                  ),
                                 ),
                               );
                             }),
