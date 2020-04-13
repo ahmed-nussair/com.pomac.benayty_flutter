@@ -35,6 +35,8 @@ class __BodyState extends State<_Body> {
       stream: Firestore.instance
           .collection('messages')
           .where('toId', isEqualTo: Globals.token)
+          .where('read', isEqualTo: false)
+//          .where('timestamp', isGreaterThan: Globals.chattingTimestamp)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -69,6 +71,9 @@ class __BodyState extends State<_Body> {
                                 ConnectionState.done) {
                               if (snapshot.hasData) {
                                 final data = snapshot.data.data;
+//                                var t = DateTime.fromMicrosecondsSinceEpoch(1586767097797 * 1000);
+//                                var u = DateTime.now().millisecondsSinceEpoch;
+//                                print(u);
                                 return GestureDetector(
 
                                   onTap: () {

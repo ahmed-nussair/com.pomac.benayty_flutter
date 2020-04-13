@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 class Globals {
 
   static String token = '1583861467mUAX0TtHPz1583861467';
+  static int chattingTimestamp = 4294967296;
 
   static Future<bool> isImageUrlWell(String imageUrl) async {
     var response = await http.get(imageUrl,);
