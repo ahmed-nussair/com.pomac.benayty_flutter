@@ -208,7 +208,15 @@ class Home extends StatelessWidget {
                       },
                     )
                   : state is WishListPageState
-                      ? WishListPage()
+                  ? WishListPage(
+                onItemClicked: (id, title) {
+                  _adId = id;
+                  _adName = title;
+                  _previousEvent = NavigateToWishListPageEvent();
+                  BlocProvider.of<HomePageBloc>(context)
+                      .add(NavigateToAdDescription());
+                },
+              )
                   : state is ContactUsState
                   ? ContactUs()
                   : state is SearchPageState
