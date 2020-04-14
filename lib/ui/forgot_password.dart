@@ -124,6 +124,7 @@ class _BodyState extends State<_Body> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () async {
+                              FocusScope.of(context).requestFocus(FocusNode());
                               if (_formKey.currentState.validate()) {
                                 setState(() {
                                   _checkingEmail = true;
@@ -315,6 +316,7 @@ class __CheckingResetCodeState extends State<_CheckingResetCode> {
                   : Container(),
               RaisedButton(
                 onPressed: () async {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   if (_formKey.currentState.validate()) {
                     var response =
                     await widget.onResponse(_resetCodeController.text);
@@ -352,7 +354,9 @@ class __CheckingResetCodeState extends State<_CheckingResetCode> {
                     )),
               ),
               RaisedButton(
+
                 onPressed: () async {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   Navigator.of(context).pop();
                 },
                 child: Container(

@@ -155,9 +155,9 @@ class _LoginState extends State<LoginBody> {
                             bottom: 20.0,
                           ),
                           child: GestureDetector(
-                            onTap: () =>
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => ForgotPassword())),
+//                            onTap: () =>
+//                                Navigator.of(context).push(MaterialPageRoute(
+//                                    builder: (context) => ForgotPassword())),
                             child: Container(
                               alignment: Alignment.centerRight,
                               child: Text(
