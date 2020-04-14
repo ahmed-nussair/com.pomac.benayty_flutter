@@ -150,9 +150,10 @@ class AdItem extends StatelessWidget {
           }
         }
 
-        return '$duration $durationUnit';
+
       }
     }
+    return '$duration $durationUnit';
   }
 
   @override
