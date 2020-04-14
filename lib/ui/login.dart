@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:benayty/chopper/credentials_service.dart';
 import 'package:benayty/ui/forgot_password.dart';
+import 'package:benayty/ui/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -161,6 +162,31 @@ class _LoginState extends State<LoginBody> {
                               alignment: Alignment.centerRight,
                               child: Text(
                                 'نسيت كلمة المرور',
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: Color(0xff1f80a9),
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 6.0,
+                            right: 35.0,
+                            bottom: 20.0,
+                          ),
+                          child: GestureDetector(
+                            onTap: () =>
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Register())),
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'مستخدم جديد؟ قم بالتسجيل',
                                 style: TextStyle(
                                   fontFamily: 'Cairo',
                                   color: Color(0xff1f80a9),

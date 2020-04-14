@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../globals.dart';
+import '../login.dart';
 import 'ad_item.dart';
 
 class MyAds extends StatelessWidget {
@@ -15,11 +16,35 @@ class MyAds extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return Globals.token.isNotEmpty ? Provider(
       create: (_) => ProfileService.create(),
       dispose: (_, ProfileService service) => service.client.dispose(),
       child: _Body(
         onItemSelected: onItemSelected,
+      ),
+    ) :
+    Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text('قم بتسجيل الدخول لكي تتمكن من رؤية إعلاناتك',
+            style: TextStyle(
+              fontFamily: 'Cairo',
+            ),
+          ),
+          RaisedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => Login()));
+            },
+            child: Text('تسجيل الدخول',
+              style: TextStyle(
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
