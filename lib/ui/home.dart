@@ -11,6 +11,7 @@ import 'package:benayty/ui/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../globals.dart';
@@ -18,6 +19,7 @@ import 'home_pages/ad_description.dart';
 import 'home_pages/add_advertisement_pages/add_advertisement_page_1.dart';
 import 'home_pages/add_advertisement_pages/add_advertisement_page_2.dart';
 import 'home_pages/contact_us.dart';
+import 'login.dart';
 
 class Home extends StatelessWidget {
   final _key = GlobalKey<ScaffoldState>();
@@ -77,10 +79,7 @@ class Home extends StatelessWidget {
                   .add(NavigateToHomePageEvent());
               Navigator.of(context).pop();
             }),
-            _drawerItem(Icons.location_on, 'المواضيع بالمدينة', () {
-              Navigator.of(context).pop();
-            }),
-            _drawerItem(Icons.search, 'بحث', () {
+            _drawerItem(Icons.search, 'إعلاناتي', () {
               Navigator.of(context).pop();
             }),
             _drawerItem(Icons.person, 'التسجيل', () {
@@ -96,19 +95,33 @@ class Home extends StatelessWidget {
                   .add(NavigateToContactUsPage());
               Navigator.of(context).pop();
             }),
-            Globals.token.isNotEmpty ? _drawerItem(
-                Icons.exit_to_app, 'تسجيل خروج', () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-
-              await prefs.remove('token');
-              await prefs.remove('userName');
-              await prefs.remove('userPhone');
-              await prefs.remove('userImagePath');
-
-              Globals.token = '';
-
+            _drawerItem(
+                Icons.exit_to_app, 'تسجيل الدخول / الخروج', () async {
               Navigator.of(context).pop();
-            }) : Container(),
+              if (Globals.token.isEmpty) {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => Login()));
+              } else {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+
+                await prefs.remove('token');
+                await prefs.remove('userName');
+                await prefs.remove('userPhone');
+                await prefs.remove('userImagePath');
+
+                Globals.token = '';
+
+                Fluttertoast.showToast(
+                    msg: 'تم تسجيل خروجك',
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.grey,
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                );
+              }
+            }),
           ];
           return SafeArea(
             child: Scaffold(
