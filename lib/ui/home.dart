@@ -2,6 +2,7 @@ import 'package:benayty/bloc/home_page_bloc/bloc.dart';
 import 'package:benayty/ui/home_pages/chatting_page.dart';
 import 'package:benayty/ui/home_pages/home_page.dart';
 import 'package:benayty/ui/home_pages/messages_page.dart';
+import 'package:benayty/ui/home_pages/my_ads.dart';
 import 'package:benayty/ui/home_pages/notifications_page.dart';
 import 'package:benayty/ui/home_pages/search_page.dart';
 import 'package:benayty/ui/home_pages/secondary_page.dart';
@@ -85,6 +86,8 @@ class Home extends StatelessWidget {
             }),
             _drawerItem(Icons.search, 'إعلاناتي', () {
               Navigator.of(context).pop();
+              BlocProvider.of<HomePageBloc>(context)
+                  .add(NavigateToMyAdsPageEvent());
             }),
             _drawerItem(Icons.person, 'التسجيل', () {
               Navigator.of(context).pop();
@@ -209,6 +212,8 @@ class Home extends StatelessWidget {
                               ? 'المفضلة'
                       : state is ContactUsState
                       ? 'اتصل بنا'
+                      : state is MyAdsPageState
+                      ? 'إعلاناتي'
                       : state is MessagesPageState
                       ? 'الرسائل'
                       : state is ChattingPageState
@@ -353,6 +358,14 @@ class Home extends StatelessWidget {
                 userId:
                 _userIdForChatting,
               )
+                  : state is MyAdsPageState ?
+              MyAds(onItemSelected: (id, title) {
+                _adId = id;
+                _adName = title;
+                EventsStack.push(NavigateToSearchPageEvent());
+                BlocProvider.of<HomePageBloc>(context)
+                    .add(NavigateToAdDescription());
+              })
                   : Container(),
               bottomNavigationBar: Stack(
                 overflow: Overflow.visible,
