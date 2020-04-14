@@ -28,28 +28,47 @@ class Home extends StatelessWidget {
   Widget _drawerItem(IconData icon, String title, Function function) {
     return GestureDetector(
       onTap: () => function(),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              title,
-              style: TextStyle(fontFamily: 'Cairo', color: Color(0xff1f80a9)),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(5.0),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              icon,
+      child: ListTile(
+        title: Container(
+          alignment: Alignment.centerRight,
+          child: Text(
+            title,
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 17,
               color: Color(0xff1f80a9),
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ],
+        ),
+        trailing: Icon(
+          icon,
+          color: Color(0xff1f80a9),
+        ),
       ),
+//      child: Row(
+//        mainAxisAlignment: MainAxisAlignment.end,
+//        children: <Widget>[
+//          Padding(
+//            padding: const EdgeInsets.all(8.0),
+//            child: Text(
+//              title,
+//              style: TextStyle(fontFamily: 'Cairo', color: Color(0xff1f80a9)),
+//            ),
+//          ),
+//          Padding(
+//            padding: EdgeInsets.all(5.0),
+//          ),
+//          Padding(
+//            padding: const EdgeInsets.all(8.0),
+//            child: Icon(
+//              icon,
+//              color: Color(0xff1f80a9),
+//            ),
+//          ),
+//        ],
+//      ),
     );
   }
 
@@ -84,17 +103,17 @@ class Home extends StatelessWidget {
                   .add(NavigateToHomePageEvent());
               Navigator.of(context).pop();
             }),
-            _drawerItem(Icons.search, 'إعلاناتي', () {
+            _drawerItem(Icons.local_offer, 'إعلاناتي', () {
               Navigator.of(context).pop();
               BlocProvider.of<HomePageBloc>(context)
                   .add(NavigateToMyAdsPageEvent());
             }),
             _drawerItem(Icons.person, 'التسجيل', () {
               Navigator.of(context).pop();
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => Register()));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => Register()));
             }),
-            _drawerItem(Icons.favorite_border, 'المفضله', () {
+            _drawerItem(Icons.favorite_border, 'المفضلة', () {
               Navigator.of(context).pop();
               BlocProvider.of<HomePageBloc>(context)
                   .add(NavigateToWishListPageEvent());
@@ -104,12 +123,11 @@ class Home extends StatelessWidget {
 //                  .add(NavigateToContactUsPage());
 //              Navigator.of(context).pop();
 //            }),
-            _drawerItem(
-                Icons.exit_to_app, 'تسجيل الدخول / الخروج', () async {
+            _drawerItem(Icons.exit_to_app, 'تسجيل الدخول / الخروج', () async {
               Navigator.of(context).pop();
               if (Globals.token.isEmpty) {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => Login()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => Login()));
               } else {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -120,6 +138,9 @@ class Home extends StatelessWidget {
 
                 Globals.token = '';
 
+                BlocProvider.of<HomePageBloc>(context)
+                    .add(NavigateToHomePageEvent());
+
                 Fluttertoast.showToast(
                     msg: 'تم تسجيل خروجك',
                     toastLength: Toast.LENGTH_SHORT,
@@ -127,8 +148,7 @@ class Home extends StatelessWidget {
                     timeInSecForIosWeb: 1,
                     backgroundColor: Colors.grey,
                     textColor: Colors.white,
-                    fontSize: 16.0
-                );
+                    fontSize: 16.0);
               }
             }),
           ];
@@ -265,7 +285,8 @@ class Home extends StatelessWidget {
                 onItemSelected: (id, title) {
                   _adId = id;
                   _adName = title;
-                  EventsStack.push(NavigateToSearchPageEvent());
+                  EventsStack.push(
+                      NavigateToSearchPageEvent());
                   BlocProvider.of<HomePageBloc>(context)
                       .add(NavigateToAdDescription());
                 },
@@ -293,7 +314,8 @@ class Home extends StatelessWidget {
                 onChatting: (userId, userName) {
                   _userIdForChatting = userId;
                   _userNameForChatting = userName;
-                  EventsStack.push(NavigateToMessagesPageEvent());
+                  EventsStack.push(
+                      NavigateToMessagesPageEvent());
                   BlocProvider.of<HomePageBloc>(
                       context)
                       .add(
@@ -320,7 +342,8 @@ class Home extends StatelessWidget {
                       NavigateToAdvertiseAddingPage2());
                 },
               )
-                  : state is AddAdvertisementPage2State
+                  : state
+              is AddAdvertisementPage2State
                   ? AddAdvertisementPage2(
                 mainItemId:
                 _mainItemIdForAdAdded,
@@ -345,7 +368,8 @@ class Home extends StatelessWidget {
                       userId;
                   _userNameForChatting =
                       userName;
-                  EventsStack.push(NavigateToAdDescription());
+                  EventsStack.push(
+                      NavigateToAdDescription());
                   BlocProvider.of<
                       HomePageBloc>(
                       context)
@@ -353,19 +377,29 @@ class Home extends StatelessWidget {
                       NavigateToChattingPageEvent());
                 },
               )
-                  : state is ChattingPageState
+                  : state
+              is ChattingPageState
                   ? ChattingPage(
                 userId:
                 _userIdForChatting,
               )
-                  : state is MyAdsPageState ?
-              MyAds(onItemSelected: (id, title) {
-                _adId = id;
-                _adName = title;
-                EventsStack.push(NavigateToMyAdsPageEvent());
-                BlocProvider.of<HomePageBloc>(context)
-                    .add(NavigateToAdDescription());
-              })
+                  : state
+              is MyAdsPageState
+                  ? MyAds(
+                  onItemSelected:
+                      (id,
+                      title) {
+                    _adId = id;
+                    _adName =
+                        title;
+                    EventsStack.push(
+                        NavigateToMyAdsPageEvent());
+                    BlocProvider.of<
+                        HomePageBloc>(
+                        context)
+                        .add(
+                        NavigateToAdDescription());
+                  })
                   : Container(),
               bottomNavigationBar: Stack(
                 overflow: Overflow.visible,

@@ -322,20 +322,17 @@ class _SecondaryItems extends StatelessWidget {
           onTap: (){
             onItemSelected(list[index]['id'], list[index]['name']);
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(list[index]['name'],
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                ),
+          child: ListTile(
+            title: Text(list[index]['name'],
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Cairo',
               ),
-              Divider(
-                color: Color(0xff1f80a9),
-                thickness: 1,
-              ),
-            ],
+            ),
+            subtitle: Divider(
+              color: Color(0xff1f80a9),
+              thickness: 1,
+            ),
           ),
         );
       }),
@@ -359,20 +356,17 @@ class _AreasItems extends StatelessWidget {
           onTap: (){
             onItemSelected(list[index]['id'], list[index]['name']);
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(list[index]['name'],
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                ),
+          child: ListTile(
+            title: Text(list[index]['name'],
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Cairo',
               ),
-              Divider(
-                color: Color(0xff1f80a9),
-                thickness: 1,
-              ),
-            ],
+            ),
+            subtitle: Divider(
+              color: Color(0xff1f80a9),
+              thickness: 1,
+            ),
           ),
         );
       }),
@@ -396,20 +390,17 @@ class _CityItems extends StatelessWidget {
           onTap: (){
             onItemSelected(list[index]['id'], list[index]['name']);
           },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(list[index]['name'],
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                ),
+          child: ListTile(
+            title: Text(list[index]['name'],
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Cairo',
               ),
-              Divider(
-                color: Color(0xff1f80a9),
-                thickness: 1,
-              ),
-            ],
+            ),
+            subtitle: Divider(
+              color: Color(0xff1f80a9),
+              thickness: 1,
+            ),
           ),
         );
       }),

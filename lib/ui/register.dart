@@ -4,6 +4,9 @@ import 'package:benayty/chopper/credentials_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../globals.dart';
 final List codes = [
   {
     'name': 'مصر',
@@ -314,6 +317,7 @@ class _RegisterState extends State<RegisterBody> {
                               right: 8.0, left: 8.0, bottom: 8.0),
                           child: GestureDetector(
                             onTap: () async {
+                              FocusScope.of(context).requestFocus(FocusNode());
                               setState(() {
                                 _registering = true;
                               });
@@ -334,6 +338,18 @@ class _RegisterState extends State<RegisterBody> {
                               final theData = json.decode(data.bodyString);
 
                               if(theData['status'] == 200){
+                                SharedPreferences prefs = await SharedPreferences
+                                    .getInstance();
+
+                                prefs.setString('token', theData['token']);
+                                prefs.setString(
+                                    'userName', theData['user_data']['name']);
+                                prefs.setString(
+                                    'userPhone', theData['user_data']['phone']);
+                                prefs.setString('userImagePath',
+                                    theData['user_data']['imagePath']);
+
+                                Globals.token = prefs.getString('token');
                                 Navigator.of(context).pop();
                                 widget.onRegistered();
                               } else {

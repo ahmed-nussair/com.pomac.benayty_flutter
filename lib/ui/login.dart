@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../globals.dart';
+import 'home.dart';
 
 class Login extends StatelessWidget {
 
@@ -147,30 +148,30 @@ class _LoginState extends State<LoginBody> {
                           ),
                         ),
 
-                        // forgot password
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 6.0,
-                            right: 35.0,
-                            bottom: 20.0,
-                          ),
-                          child: GestureDetector(
-//                            onTap: () =>
-//                                Navigator.of(context).push(MaterialPageRoute(
-//                                    builder: (context) => ForgotPassword())),
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'نسيت كلمة المرور',
-                                style: TextStyle(
-                                  fontFamily: 'Cairo',
-                                  color: Color(0xff1f80a9),
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+//                        // forgot password
+//                        Padding(
+//                          padding: const EdgeInsets.only(
+//                            top: 6.0,
+//                            right: 35.0,
+//                            bottom: 20.0,
+//                          ),
+//                          child: GestureDetector(
+////                            onTap: () =>
+////                                Navigator.of(context).push(MaterialPageRoute(
+////                                    builder: (context) => ForgotPassword())),
+//                            child: Container(
+//                              alignment: Alignment.centerRight,
+//                              child: Text(
+//                                'نسيت كلمة المرور',
+//                                style: TextStyle(
+//                                  fontFamily: 'Cairo',
+//                                  color: Color(0xff1f80a9),
+//                                  decoration: TextDecoration.underline,
+//                                ),
+//                              ),
+//                            ),
+//                          ),
+//                        ),
 
 
                         Padding(
@@ -182,7 +183,16 @@ class _LoginState extends State<LoginBody> {
                           child: GestureDetector(
                             onTap: () =>
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => Register())),
+                                    builder: (context) =>
+                                        Register(
+                                          onRegistered: () {
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Home()));
+                                          },
+                                        ))),
                             child: Container(
                               alignment: Alignment.centerRight,
                               child: Text(
