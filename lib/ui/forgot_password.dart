@@ -6,13 +6,14 @@ import 'package:chopper/chopper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'custom_show_dialog.dart';
 
 class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
       create: (_) => CredentialsService.create(),
-      dispose: (_, CredentialsService service) => service.client.dispose(),
+//      dispose: (_, CredentialsService service) => service.client.dispose(),
       child: _Body(),
     );
   }
@@ -86,6 +87,11 @@ class _BodyState extends State<_Body> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty)
+                                return 'من فضلك أدخل البريد الإليكتروني';
+                              return null;
+                            },
                             controller: _emailTextController,
                             keyboardType: TextInputType.emailAddress,
                             textAlign: TextAlign.right,
@@ -108,7 +114,7 @@ class _BodyState extends State<_Body> {
                                   color: Color(0xff1f80a9),
                                 ),
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(50.0)),
+                                BorderRadius.all(Radius.circular(50.0)),
                               ),
                             ),
                           ),
@@ -118,62 +124,67 @@ class _BodyState extends State<_Body> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () async {
-                              setState(() {
-                                _checkingEmail = true;
-                              });
-                              final response =
-                                  await Provider.of<CredentialsService>(context,
-                                          listen: false)
-                                      .forgotPassword({
-                                'email': _emailTextController.text,
-                              });
+                              if (_formKey.currentState.validate()) {
+                                setState(() {
+                                  _checkingEmail = true;
+                                });
+                                final response =
+                                await Provider.of<CredentialsService>(context,
+                                    listen: false)
+                                    .forgotPassword({
+                                  'email': _emailTextController.text,
+                                });
 
-                              final data = json.decode(response.bodyString);
+                                final data = json.decode(response.bodyString);
 
-                              setState(() {
-                                _checkingEmail = false;
-                              });
+                                setState(() {
+                                  _checkingEmail = false;
+                                });
 
-                              String message = '';
+                                String message = '';
 
-                              message = data['message'];
-                              _emailTextController.clear();
+                                message = data['message'];
+                                _emailTextController.clear();
 
-                              showDialog(
-                                context: context,
-                                child: data['status'] == 200
-                                    ? _CheckingResetCode(
-                                        message: message,
-                                        onResponse: (value) {
-                                          return Provider.of<
-                                              CredentialsService>(
-                                            context,
-                                            listen: false,
-                                          ).checkResetCode({
-                                            'reset_code': value,
-                                          });
-                                        },
-                                      )
-                                    : AlertDialog(
-                                        title: Text(
-                                          message,
-                                          style: TextStyle(
-                                            fontFamily: 'Cairo',
-                                          ),
+                                showDialog(
+                                  context: context,
+                                  child: data['status'] == 200
+                                      ? _CheckingResetCode(
+                                    message: message,
+                                    onResponse: (value) {
+                                      return Provider.of<
+                                          CredentialsService>(
+                                        context,
+                                        listen: false,
+                                      ).checkResetCode({
+                                        'reset_code': value,
+                                      });
+                                    },
+                                  )
+                                      : CustomAlertDialog(
+                                    content: Container(
+                                      height: 50,
+                                      child: Text(
+                                        message,
+                                        style: TextStyle(
+                                          fontFamily: 'Cairo',
                                         ),
-                                        actions: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              child: Text('إغلاق'),
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ),
-                                        ],
                                       ),
-                              );
+                                    ),
+                                    actions: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: GestureDetector(
+                                          child: Text('إغلاق'),
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width,
@@ -253,79 +264,107 @@ class __CheckingResetCodeState extends State<_CheckingResetCode> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              widget.message,
-              style: TextStyle(
-                fontFamily: 'Cairo',
+    return Provider(
+      create: (_) => CredentialsService.create(),
+      dispose: (_, CredentialsService service) => service.client.dispose(),
+      child: CustomAlertDialog(
+        content: Container(
+          height: 300,
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  widget.message,
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                  ),
+                ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Form(
-              key: _formKey,
-              child: TextFormField(
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'من فضلك أدخل الكود';
-                  }
-                  return null;
-                },
-                controller: _resetCodeController,
-                decoration: InputDecoration(
-                  hintText: 'Enter the reset code',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      width: 1,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'من فضلك أدخل الكود';
+                      }
+                      return null;
+                    },
+                    controller: _resetCodeController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter the reset code',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        borderSide: BorderSide(
+                          width: 1,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-          _wrongToken
-              ? Text(
-                  'الكود غير صحيح',
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
-                )
-              : Container(),
-          RaisedButton(
-            onPressed: () async {
-              if (_formKey.currentState.validate()) {
-                var response =
+              _wrongToken
+                  ? Text(
+                'الكود غير صحيح',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              )
+                  : Container(),
+              RaisedButton(
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    var response =
                     await widget.onResponse(_resetCodeController.text);
 
-                final data = json.decode(response.bodyString);
+                    final data = json.decode(response.bodyString);
 
-                if (data['status'] == 200) {
-                  // you can change the password
-                  setState(() {
-                    _wrongToken = false;
-                  });
+                    if (data['status'] == 200) {
+                      // you can change the password
+                      setState(() {
+                        _wrongToken = false;
+                      });
 
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) =>
+                              ResetPassword(
+                                resetCode: _resetCodeController.text,
+                              )));
+                    } else {
+                      setState(() {
+                        _wrongToken = true;
+                      });
+                    }
+                  } else {
+                    setState(() {
+                      _wrongToken = false;
+                    });
+                  }
+                },
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'التأكد من الكود وتغيير كلمة المرور',
+                      textAlign: TextAlign.center,
+                    )),
+              ),
+              RaisedButton(
+                onPressed: () async {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => ResetPassword(
-                            resetCode: _resetCodeController.text,
-                          )));
-                } else {
-                  setState(() {
-                    _wrongToken = true;
-                  });
-                }
-              }
-            },
-            child: Text('التأكد من الكود وتغيير كلمة المرور'),
+                },
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'إلغاء',
+                      textAlign: TextAlign.center,
+                    )),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -41,6 +41,8 @@ class _BodyState extends State<_Body> {
 
   bool _resetingPassword = false;
 
+  String _password = '';
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -97,6 +99,12 @@ class _BodyState extends State<_Body> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty)
+                                return 'من فضلك أدخل كلمة المرور';
+                              _password = value;
+                              return null;
+                            },
                             controller: _passwordController,
                             textAlign: TextAlign.right,
                             obscureText: true,
@@ -119,7 +127,7 @@ class _BodyState extends State<_Body> {
                                   color: Color(0xff1f80a9),
                                 ),
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(50.0)),
+                                BorderRadius.all(Radius.circular(50.0)),
                               ),
                             ),
                           ),
@@ -129,6 +137,13 @@ class _BodyState extends State<_Body> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
+                            validator: (value) {
+                              if (value.isEmpty)
+                                return 'من فضلك أعد إدخال كلمة المرور';
+                              if (value != _password)
+                                return 'كلمة المرور غير مطاابقة';
+                              return null;
+                            },
                             controller: _confirmPasswordController,
                             textAlign: TextAlign.right,
                             obscureText: true,
@@ -151,7 +166,7 @@ class _BodyState extends State<_Body> {
                                   color: Color(0xff1f80a9),
                                 ),
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(50.0)),
+                                BorderRadius.all(Radius.circular(50.0)),
                               ),
                             ),
                           ),
@@ -161,70 +176,73 @@ class _BodyState extends State<_Body> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () async {
-                              setState(() {
-                                _resetingPassword = true;
-                              });
-                              final response =
-                                  await Provider.of<CredentialsService>(context,
-                                          listen: false)
-                                      .resetPassword({
-                                'reset_code': widget.resetCode,
-                                'password': _passwordController.text,
-                                'password_confirm':
-                                    _confirmPasswordController.text,
-                              });
+                              if (_formKey.currentState.validate()) {
+                                setState(() {
+                                  _resetingPassword = true;
+                                });
+                                final response =
+                                await Provider.of<CredentialsService>(context,
+                                    listen: false)
+                                    .resetPassword({
+                                  'reset_code': widget.resetCode,
+                                  'password': _passwordController.text,
+                                  'password_confirm':
+                                  _confirmPasswordController.text,
+                                });
 
-                              final data = json.decode(response.bodyString);
+                                final data = json.decode(response.bodyString);
 
-                              setState(() {
-                                _resetingPassword = false;
-                              });
+                                setState(() {
+                                  _resetingPassword = false;
+                                });
 
-                              String message = '';
+                                String message = '';
 
-                              if (data['status'] == 200) {
-                                message = data['message'];
-                              } else {
-                                message = data['errors'][0];
-                              }
+                                if (data['status'] == 200) {
+                                  message = data['message'];
+                                } else {
+                                  message = data['errors'][0];
+                                }
 
-                              _resetCodeController.clear();
-                              _passwordController.clear();
-                              _confirmPasswordController.clear();
+                                _resetCodeController.clear();
+                                _passwordController.clear();
+                                _confirmPasswordController.clear();
 
-                              showDialog(
-                                context: context,
-                                child: AlertDialog(
-                                  title: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      message,
-                                      style: TextStyle(
-                                        fontFamily: 'Cairo',
-                                      ),
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    Padding(
+                                showDialog(
+                                  context: context,
+                                  child: AlertDialog(
+                                    title: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context).pop();
-                                          if (data['status'] == 200) {
-                                            Navigator.of(context).pop();
-                                          }
-                                        },
-                                        child: Text(
-                                          'إغلاق',
-                                          style: TextStyle(
-                                            fontFamily: 'Cairo',
-                                          ),
+                                      child: Text(
+                                        message,
+                                        style: TextStyle(
+                                          fontFamily: 'Cairo',
                                         ),
                                       ),
-                                    )
-                                  ],
-                                ),
-                              );
+                                    ),
+                                    actions: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).pop();
+                                            if (data['status'] == 200) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          child: Text(
+                                            'إغلاق',
+                                            style: TextStyle(
+                                              fontFamily: 'Cairo',
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
+
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width,
