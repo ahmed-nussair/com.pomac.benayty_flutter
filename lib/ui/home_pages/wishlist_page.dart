@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:benayty/chopper/wishlist_service.dart';
 import 'package:benayty/ui/home_pages/ad_item.dart';
+import 'package:benayty/ui/login.dart';
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,11 +17,35 @@ class WishListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return Globals.token.isNotEmpty ? Provider(
       create: (_) => WishListService.create(),
       dispose: (_, WishListService service) => service.client.dispose(),
       child: _Body(
         onItemClicked: onItemClicked,
+      ),
+    ) :
+    Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text('تحتاج إلى تسجيل الدخول حتى تتمكن من رؤية المفضلة',
+            style: TextStyle(
+              fontFamily: 'Cairo',
+            ),
+          ),
+          RaisedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => Login()));
+            },
+            child: Text('تسجيل الدخول',
+              style: TextStyle(
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

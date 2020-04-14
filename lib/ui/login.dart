@@ -1,9 +1,13 @@
 import 'dart:convert';
 
 import 'package:benayty/chopper/credentials_service.dart';
+import 'package:benayty/ui/forgot_password.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../globals.dart';
 
 class Login extends StatelessWidget {
 
@@ -141,24 +145,32 @@ class _LoginState extends State<LoginBody> {
                             ),
                           ),
                         ),
+
+                        // forgot password
                         Padding(
                           padding: const EdgeInsets.only(
                             top: 6.0,
                             right: 35.0,
                             bottom: 20.0,
                           ),
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              'نسيت كلمة المرور',
-                              style: TextStyle(
-                                fontFamily: 'Cairo',
-                                color: Color(0xff1f80a9),
-                                decoration: TextDecoration.underline,
+                          child: GestureDetector(
+                            onTap: () =>
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ForgotPassword())),
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'نسيت كلمة المرور',
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: Color(0xff1f80a9),
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                           ),
                         ),
+
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
@@ -166,26 +178,45 @@ class _LoginState extends State<LoginBody> {
                               setState(() {
                                 _loggingIn = true;
                               });
-                              final data = await
+                              final response = await
                               Provider.of<CredentialsService>(context, listen: false)
                                   .login({'phone': _mobileTextController.text,
                                 'password': _passwordTextController.text,});
 
-                              print(data.bodyString);
+                              final data = json.decode(response.bodyString);
+
+
+                              print(response.bodyString);
 
                               setState(() {
                                 _loggingIn = false;
                               });
 
-                              final theData = json.decode(data.bodyString);
-                              if(theData['status'] == 200){
+                              print(data);
+                              if (data['status'] == 200) {
+                                SharedPreferences prefs = await SharedPreferences
+                                    .getInstance();
+
+                                prefs.setString('token', data['token']);
+                                prefs.setString(
+                                    'userName', data['user_data']['name']);
+                                prefs.setString(
+                                    'userPhone', data['user_data']['phone']);
+                                prefs.setString('userImagePath',
+                                    data['user_data']['imagePath']);
+
+                                Globals.token = prefs.getString('token');
 
                                 Navigator.of(context).pop();
-                                widget.onLogin();
+                                if (widget.onLogin != null)
+                                  widget.onLogin();
+
                               } else {
+                                _mobileTextController.clear();
+                                _passwordTextController.clear();
                                 showDialog(context: context,
                                   child: AlertDialog(
-                                    content: Text(theData['errors'][0]),
+                                    content: Text(data['errors'][0]),
                                     actions: <Widget>[Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(

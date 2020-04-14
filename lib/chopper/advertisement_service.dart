@@ -22,6 +22,9 @@ abstract class AdvertisementService extends ChopperService {
   @Post(path: '/wishlist/delete')
   Future<Response> deleteFromWishList(@Body() Map<String, dynamic> data);
 
+  @Post(path: '/comment/add')
+  Future<Response> addComment(@Body() Map<String, dynamic> body);
+
   static AdvertisementService create() {
     var client = ChopperClient(
       baseUrl: 'https://pomac.info',

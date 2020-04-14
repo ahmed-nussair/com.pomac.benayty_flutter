@@ -4,7 +4,7 @@ part 'comment_service.chopper.dart';
 
 @ChopperApi(baseUrl: '/benaity/public/api/comment')
 abstract class CommentService extends ChopperService {
-  @Post()
+  @Post(path: '/add')
   Future<Response> addComment(@Body() Map<String, dynamic> body);
 
   static CommentService create() {

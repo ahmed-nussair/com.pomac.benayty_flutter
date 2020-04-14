@@ -7,10 +7,13 @@ import 'package:benayty/ui/home_pages/search_page.dart';
 import 'package:benayty/ui/home_pages/secondary_page.dart';
 import 'package:benayty/ui/home_pages/wishlist_page.dart';
 import 'package:benayty/ui/my_icons.dart';
+import 'package:benayty/ui/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../globals.dart';
 import 'home_pages/ad_description.dart';
 import 'home_pages/add_advertisement_pages/add_advertisement_page_1.dart';
 import 'home_pages/add_advertisement_pages/add_advertisement_page_2.dart';
@@ -68,7 +71,7 @@ class Home extends StatelessWidget {
       create: (_) => HomePageBloc()..add(NavigateToHomePageEvent()),
       child: BlocBuilder<HomePageBloc, HomePageState>(
         builder: (context, state) {
-          final List _drawerItems = [
+          List _drawerItems = [
             _drawerItem(Icons.home, 'اصفحة الرئيسية', () {
               BlocProvider.of<HomePageBloc>(context)
                   .add(NavigateToHomePageEvent());
@@ -82,6 +85,8 @@ class Home extends StatelessWidget {
             }),
             _drawerItem(Icons.person, 'التسجيل', () {
               Navigator.of(context).pop();
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => Register()));
             }),
             _drawerItem(Icons.error, 'الاشتراكات', () {
               Navigator.of(context).pop();
@@ -91,9 +96,19 @@ class Home extends StatelessWidget {
                   .add(NavigateToContactUsPage());
               Navigator.of(context).pop();
             }),
-            _drawerItem(Icons.exit_to_app, 'تسجيل خروج', () {
+            Globals.token.isNotEmpty ? _drawerItem(
+                Icons.exit_to_app, 'تسجيل خروج', () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+
+              await prefs.remove('token');
+              await prefs.remove('userName');
+              await prefs.remove('userPhone');
+              await prefs.remove('userImagePath');
+
+              Globals.token = '';
+
               Navigator.of(context).pop();
-            }),
+            }) : Container(),
           ];
           return SafeArea(
             child: Scaffold(

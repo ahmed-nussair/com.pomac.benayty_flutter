@@ -24,4 +24,28 @@ class _$CredentialsService extends CredentialsService {
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> forgotPassword(Map<String, dynamic> data) {
+    final $url = '/benaity/public/api/users/forget_password';
+    final $body = data;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> checkResetCode(Map<String, dynamic> data) {
+    final $url = '/benaity/public/api/users/check_reset_code';
+    final $body = data;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> resetPassword(Map<String, dynamic> data) {
+    final $url = '/benaity/public/api/users/reset_password';
+    final $body = data;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
 }

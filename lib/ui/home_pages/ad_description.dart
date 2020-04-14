@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../globals.dart';
+import '../login.dart';
 import '../my_icons.dart';
 import 'package:benayty/chopper/advertisement_service.dart';
 
@@ -29,7 +31,6 @@ class AdDescription extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-
   final int adId;
   final Function(String, String) onMessage;
 
@@ -61,12 +62,43 @@ class _Body extends StatelessWidget {
       ),
     );
   }
+
+  _showDialog(BuildContext context) {
+    showDialog(context: context,
+      child: AlertDialog(
+        title: Text('قم بتسجيل الدخول حتى يمكنك القيام بهذه العملية',
+          style: TextStyle(
+            fontFamily: 'Cairo',
+          ),
+        ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: Text('إغلاق'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => Login()));
+              },
+              child: Text('تسجيل الدخول'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder<Response>(
-      future: Provider.of<AdvertisementService>(context)
-          .showAdvertisement(adId),
+      future:
+      Provider.of<AdvertisementService>(context).showAdvertisement(adId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (!snapshot.data.isSuccessful) {
@@ -162,7 +194,6 @@ class _Body extends StatelessWidget {
                     width: MediaQuery.of(context).size.width,
                     child: ListView(
                       children: <Widget>[
-
                         // Ad Description
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -196,76 +227,163 @@ class _Body extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              _adButton(Icons.favorite, () async {
-                                final response = await Provider.of<
-                                    AdvertisementService>(
-                                    context, listen: false).addToWishList({
-                                  'token': Globals.token,
-                                  'advertisement_id': '$adId',
-                                });
 
-                                final data = json.decode(response.bodyString);
+                              // Add to wishlist
+                              _adButton(Icons.favorite, () async {
                                 String _result = '';
                                 bool done = false;
-                                if (data['status'] == 200) {
-                                  _result = data['message'];
-                                  done = true;
-                                } else {
-                                  _result = data['errors'][0];
-                                }
+                                if (Globals.token.isNotEmpty) {
+                                  final response =
+                                  await Provider.of<AdvertisementService>(
+                                      context,
+                                      listen: false)
+                                      .addToWishList({
+                                    'token': Globals.token,
+                                    'advertisement_id': '$adId',
+                                  });
 
-                                showDialog(context: context,
-                                  child: AlertDialog(
+                                  final data = json.decode(response.bodyString);
 
-                                    title: Stack(
-                                      children: <Widget>[
+                                  if (data['status'] == 200) {
+                                    _result = data['message'];
+                                    done = true;
+                                  } else {
+                                    _result = data['errors'][0];
+                                  }
+
+                                  showDialog(
+                                    context: context,
+                                    child: AlertDialog(
+                                      title: Stack(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.all(15.0),
+                                            child: Text(
+                                              _result,
+                                              style: TextStyle(
+                                                fontFamily: 'Cairo',
+                                                color: Color(0xff1f80a9),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            right: 0.0,
+                                            top: 0.0,
+                                            child: done &&
+                                                Globals.token.isNotEmpty
+                                                ? CircleAvatar(
+                                              backgroundColor: Colors.green,
+                                              child: Icon(
+                                                Icons.done,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                                : CircleAvatar(
+                                              backgroundColor: Colors.red,
+                                              child: Icon(
+                                                Icons.clear,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      actions: <Widget>[
                                         Padding(
-                                          padding: const EdgeInsets.all(15.0),
-                                          child: Text(_result,
-                                            style: TextStyle(
-                                              fontFamily: 'Cairo',
-                                              color: Color(0xff1f80a9),
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              'إغلاق',
                                             ),
                                           ),
                                         ),
-                                        Positioned(
-                                          right: 0.0, top: 0.0,
-                                          child: done ? CircleAvatar(
-                                            backgroundColor: Colors.green,
-                                            child: Icon(
-                                              Icons.done, color: Colors.white,),
-                                          ) : CircleAvatar(
-                                            backgroundColor: Colors.red,
-                                            child: Icon(Icons.clear,
-                                              color: Colors.white,),
+                                        Globals.token.isEmpty
+                                            ? Padding(
+                                          padding:
+                                          const EdgeInsets.all(8.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Login()));
+                                            },
+                                            child: Text(
+                                              'تسجيل الدخول',
+                                            ),
                                           ),
-                                        ),
+                                        )
+                                            : Container(),
                                       ],
                                     ),
-                                    actions: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('إغلاق',),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  _showDialog(context);
+                                }
+
+
                               }),
-                              _adButton(Icons.comment, () {
-                                print('Comment Icon Clicked');
-                              },),
+
+                              // Add comment
+                              _adButton(
+                                Icons.comment,
+                                    () {
+                                  if (Globals.token.isNotEmpty) {
+                                    // add a comment
+                                    showDialog(
+                                      context: context,
+                                      child: _AddingComment(
+                                        onAddingComment: (value) async {
+                                          var response = await Provider.of<
+                                              AdvertisementService>(
+                                            context, listen: false,).addComment(
+                                              {
+                                                'token': Globals.token,
+                                                'advertisement_id': '$adId',
+                                                'comment': value,
+                                              });
+                                          print(response.bodyString);
+                                          final data = json.decode(
+                                              response.bodyString);
+                                          Fluttertoast.showToast(
+                                              msg: data['message'],
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.CENTER,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.grey,
+                                              textColor: Colors.white,
+                                              fontSize: 16.0
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    _showDialog(context);
+                                  }
+                                },
+                              ),
+
+                              // Share ad
                               _adButton(Icons.share, () {
                                 print('Share Icon Clicked');
                               }),
-                              _adButton(MyIcons.comment, () {
-                                onMessage(
-                                    '${data['user_id']}', data['user']['name']);
-                              },),
+
+                              // Message to ad owner
+                              _adButton(
+                                MyIcons.comment,
+                                    () {
+                                  if (Globals.token.isNotEmpty) {
+                                    onMessage('${data['user_id']}',
+                                        data['user']['name']);
+                                  } else {
+                                    _showDialog(context);
+                                  }
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -296,85 +414,61 @@ class _Body extends StatelessWidget {
                           ),
                         ),
 
-                        // To add a comment
-                        ListTile(
-                          trailing: CircleAvatar(
-                            backgroundImage: AssetImage('assets/testad.png'),
-                          ),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'محمد حسن الراعي',
-                                  style: TextStyle(
-                                    fontFamily: 'Cairo',
-                                    color: Color(0xff1f80a9),
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  showDialog(context: context,
-                                    child: AlertDialog(
-                                      title: _AddingComment(),
-                                      actions: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('إلغاء',
-                                              style: TextStyle(
-                                                fontFamily: 'Cairo',
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text('أضف التعليق',
-                                              style: TextStyle(
-                                                fontFamily: 'Cairo',
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    border: Border.all(
-                                      width: 1,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 8.0,
-                                      left: 8.0,
-                                      top: 8.0,
-                                      bottom: 20.0,),
-                                    child: Text('اكتب تعليقًا',
-                                      style: TextStyle(
-                                        fontFamily: 'Cairo',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+//                        // To add a comment
+//                        ListTile(
+//                          trailing: CircleAvatar(
+//                            backgroundImage: AssetImage('assets/testad.png'),
+//                          ),
+//                          title: Column(
+//                            crossAxisAlignment: CrossAxisAlignment.end,
+//                            children: <Widget>[
+//                              Padding(
+//                                padding: const EdgeInsets.all(8.0),
+//                                child: Text(
+//                                  'محمد حسن الراعي',
+//                                  style: TextStyle(
+//                                    fontFamily: 'Cairo',
+//                                    color: Color(0xff1f80a9),
+//                                  ),
+//                                ),
+//                              ),
+//                              GestureDetector(
+//                                onTap: () {
+//                                  showDialog(
+//                                    context: context,
+//                                    child: _AddingComment(onAddingComment:(value) {
+//
+//                                    }),
+//                                  );
+//                                },
+//                                child: Container(
+//                                  decoration: BoxDecoration(
+//                                    borderRadius: BorderRadius.circular(20.0),
+//                                    border: Border.all(
+//                                      width: 1,
+//                                      color: Colors.grey,
+//                                    ),
+//                                  ),
+//                                  alignment: Alignment.centerRight,
+//                                  child: Padding(
+//                                    padding: const EdgeInsets.only(
+//                                      right: 8.0,
+//                                      left: 8.0,
+//                                      top: 8.0,
+//                                      bottom: 20.0,
+//                                    ),
+//                                    child: Text(
+//                                      'اكتب تعليقًا',
+//                                      style: TextStyle(
+//                                        fontFamily: 'Cairo',
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ),
+//                              ),
+//                            ],
+//                          ),
+//                        ),
 
                         // comments
                         Column(
@@ -457,59 +551,75 @@ class _Body extends StatelessWidget {
 }
 
 class _AddingComment extends StatefulWidget {
+
+  final Function(String) onAddingComment;
+
+  _AddingComment({@required this.onAddingComment});
+
   @override
   _AddingCommentState createState() => _AddingCommentState();
 }
 
 class _AddingCommentState extends State<_AddingComment> {
-
   final _commentTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: ListTile(
-        trailing: CircleAvatar(
-          backgroundImage: AssetImage('assets/testad.png'),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'محمد حسن الراعي',
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  color: Color(0xff1f80a9),
-                ),
-              ),
+    return AlertDialog(
+      title: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          textAlign: TextAlign.end,
+          maxLines: 4,
+          controller: _commentTextController,
+          keyboardType: TextInputType.multiline,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-            TextFormField(
-              textAlign: TextAlign.end,
-              maxLines: 4,
-              controller: _commentTextController,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                hintText: 'اكتب تعليقاً',
-                hintStyle: TextStyle(
-                  fontFamily: 'Cairo',
-                ),
-                contentPadding: EdgeInsets.all(5.0),
-              ),
+            hintText: 'اكتب تعليقاً',
+            hintStyle: TextStyle(
+              fontFamily: 'Cairo',
             ),
-          ],
+            contentPadding: EdgeInsets.all(5.0),
+          ),
         ),
       ),
+      actions: <Widget>[
+
+        // close
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'إلغاء',
+              style: TextStyle(
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ),
+        ),
+
+        // add comment
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+              widget.onAddingComment(_commentTextController.text);
+            },
+            child: Text(
+              'أضف التعليق',
+              style: TextStyle(
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
-
-
-

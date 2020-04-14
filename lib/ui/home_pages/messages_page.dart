@@ -3,23 +3,46 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../globals.dart';
+import '../login.dart';
 
 class MessagesPage extends StatelessWidget {
-
   final Function(String, String) onChatting;
 
   MessagesPage({@required this.onChatting});
 
   @override
   Widget build(BuildContext context) {
-    return _Body(
+    return Globals.token.isNotEmpty
+        ? _Body(
       onChatting: onChatting,
+    )
+        : Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'قم بتسجيل الدخول حتى تتمكن من رؤية الرسائل',
+            style: TextStyle(fontFamily: 'Cairo'),
+          ),
+          RaisedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => Login()));
+            },
+            child: Text('تسجيل الدخول',
+              style: TextStyle(
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _Body extends StatefulWidget {
-
   final Function(String, String) onChatting;
 
   _Body({@required this.onChatting});
@@ -50,7 +73,8 @@ class __BodyState extends State<_Body> {
         if (snapshot.hasData) {
           final data = snapshot.data.documents;
 
-          return CustomScrollView(
+          return data.length > 0
+              ? CustomScrollView(
             slivers: <Widget>[
               SliverPadding(
                 padding: EdgeInsets.all(8.0),
@@ -75,18 +99,18 @@ class __BodyState extends State<_Body> {
 //                                var u = DateTime.now().millisecondsSinceEpoch;
 //                                print(u);
                                 return GestureDetector(
-
                                   onTap: () {
                                     widget.onChatting(id, data['name']);
                                   },
                                   child: Material(
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius:
+                                    BorderRadius.circular(10.0),
                                     elevation: 10,
                                     shadowColor: Colors.grey,
                                     child: ListTile(
                                       trailing: CircleAvatar(
-                                        backgroundImage:
-                                        NetworkImage(data['imageUrl']),
+                                        backgroundImage: NetworkImage(
+                                            data['imageUrl']),
                                       ),
                                       title: Container(
                                         alignment: Alignment.centerRight,
@@ -115,7 +139,8 @@ class __BodyState extends State<_Body> {
                             return Container(
                               alignment: Alignment.center,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment:
+                                MainAxisAlignment.center,
                                 children: <Widget>[
                                   CircularProgressIndicator(),
                                 ],
@@ -129,6 +154,15 @@ class __BodyState extends State<_Body> {
                 ),
               ),
             ],
+          )
+              : Center(
+            child: Text(
+              'ليس لديك رسائل',
+              style: TextStyle(
+                fontFamily: 'Cairo',
+                color: Color(0xff1f80a9),
+              ),
+            ),
           );
         }
         return Container(

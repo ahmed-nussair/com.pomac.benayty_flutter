@@ -1,9 +1,11 @@
 import 'package:benayty/ui/register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
 
+import '../globals.dart';
 import 'home.dart';
 import 'login.dart';
 
@@ -37,8 +39,12 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     _skipController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
     _animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.linear))
-    ..addStatusListener((status){
+      ..addStatusListener((status) async {
       if(status == AnimationStatus.completed){
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        String token = prefs.getString('token') ?? '';
+        Globals.token = token;
         Timer(Duration(seconds: 1), () =>
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => Home())));

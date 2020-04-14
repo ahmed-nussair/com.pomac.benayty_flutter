@@ -18,7 +18,7 @@ class _$CommentService extends CommentService {
 
   @override
   Future<Response<dynamic>> addComment(Map<String, dynamic> body) {
-    final $url = '/benaity/public/api/comment';
+    final $url = '/benaity/public/api/comment/add';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
