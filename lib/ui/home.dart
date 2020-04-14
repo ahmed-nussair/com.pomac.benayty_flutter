@@ -362,7 +362,7 @@ class Home extends StatelessWidget {
               MyAds(onItemSelected: (id, title) {
                 _adId = id;
                 _adName = title;
-                EventsStack.push(NavigateToSearchPageEvent());
+                EventsStack.push(NavigateToMyAdsPageEvent());
                 BlocProvider.of<HomePageBloc>(context)
                     .add(NavigateToAdDescription());
               })
