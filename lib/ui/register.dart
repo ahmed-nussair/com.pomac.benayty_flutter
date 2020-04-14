@@ -234,31 +234,21 @@ class _RegisterState extends State<RegisterBody> {
                               ),
                               Positioned(
                                 top: 0.0, bottom: 0.0, right: 0.0,
-                                child: GestureDetector(
-                                  onTap: (){
-
-                                    _setCountryCode((String code){
-                                      setState(() {
-                                        _countryCode = code;
-                                      });
-                                    });
-
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                                      color: Color(0xff1f80a9),
-                                    ),
-                                    child: Text(
-                                      _countryCode,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Cairo',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                child: Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(50.0)),
+                                    color: Color(0xff1f80a9),
+                                  ),
+                                  child: Text(
+                                    _countryCode,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Cairo',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
@@ -293,32 +283,32 @@ class _RegisterState extends State<RegisterBody> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 6.0, right: 20.0, bottom: 20.0,),
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Text('أوافق على سياسة الاستخدام',
-                                  style: TextStyle(
-                                    fontFamily: 'Cairo',
-                                    color: Color(0xff1f80a9),
-                                  ),
-                                ),
-
-                                Checkbox(value: _checked, onChanged: (bool value) {
-                                  setState(() {
-                                    _checked = value;
-                                  });
-                                },
-                                  activeColor: Color(0xff1f80a9),
-
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+//                        Padding(
+//                          padding: const EdgeInsets.only(top: 6.0, right: 20.0, bottom: 20.0,),
+//                          child: Container(
+//                            alignment: Alignment.centerRight,
+//                            child: Row(
+//                              mainAxisAlignment: MainAxisAlignment.end,
+//                              children: <Widget>[
+//                                Text('أوافق على سياسة الاستخدام',
+//                                  style: TextStyle(
+//                                    fontFamily: 'Cairo',
+//                                    color: Color(0xff1f80a9),
+//                                  ),
+//                                ),
+//
+//                                Checkbox(value: _checked, onChanged: (bool value) {
+//                                  setState(() {
+//                                    _checked = value;
+//                                  });
+//                                },
+//                                  activeColor: Color(0xff1f80a9),
+//
+//                                ),
+//                              ],
+//                            ),
+//                          ),
+//                        ),
                         Padding(
                           padding: const EdgeInsets.only(
                               right: 8.0, left: 8.0, bottom: 8.0),

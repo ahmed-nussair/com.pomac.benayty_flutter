@@ -79,7 +79,7 @@ class Home extends StatelessWidget {
       child: BlocBuilder<HomePageBloc, HomePageState>(
         builder: (context, state) {
           List _drawerItems = [
-            _drawerItem(Icons.home, 'اصفحة الرئيسية', () {
+            _drawerItem(Icons.home, 'الصفحة الرئيسية', () {
               BlocProvider.of<HomePageBloc>(context)
                   .add(NavigateToHomePageEvent());
               Navigator.of(context).pop();
