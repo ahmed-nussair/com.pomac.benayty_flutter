@@ -30,19 +30,23 @@ class Home extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Flexible(
-              child: Text(
-            title,
-            style: TextStyle(fontFamily: 'Cairo', color: Color(0xff1f80a9)),
-          )),
-          Flexible(
-              child: Padding(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              title,
+              style: TextStyle(fontFamily: 'Cairo', color: Color(0xff1f80a9)),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(5.0),
+          ),
+          Padding(
             padding: const EdgeInsets.all(8.0),
             child: Icon(
               icon,
               color: Color(0xff1f80a9),
             ),
-          )),
+          ),
         ],
       ),
     );
@@ -87,14 +91,16 @@ class Home extends StatelessWidget {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => Register()));
             }),
-            _drawerItem(Icons.error, 'الاشتراكات', () {
+            _drawerItem(Icons.favorite_border, 'المفضله', () {
               Navigator.of(context).pop();
-            }),
-            _drawerItem(Icons.phone, 'اتصل بنا', () {
               BlocProvider.of<HomePageBloc>(context)
-                  .add(NavigateToContactUsPage());
-              Navigator.of(context).pop();
+                  .add(NavigateToWishListPageEvent());
             }),
+//            _drawerItem(Icons.phone, 'اتصل بنا', () {
+//              BlocProvider.of<HomePageBloc>(context)
+//                  .add(NavigateToContactUsPage());
+//              Navigator.of(context).pop();
+//            }),
             _drawerItem(
                 Icons.exit_to_app, 'تسجيل الدخول / الخروج', () async {
               Navigator.of(context).pop();

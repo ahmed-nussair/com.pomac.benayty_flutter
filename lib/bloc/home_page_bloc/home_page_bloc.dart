@@ -32,8 +32,11 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       yield ChattingPageState();
     } else if (event is NavigateToContactUsPage) {
       yield ContactUsState();
+    } else if (event is NavigateToMyAdsPageEvent) {
+      yield MyAdsPageState();
     } else {
       yield InitialHomePageState();
     }
   }
+
 }

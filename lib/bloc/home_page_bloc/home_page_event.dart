@@ -58,3 +58,8 @@ class NavigateToChattingPageEvent extends HomePageEvent {
   @override
   List<Object> get props => [];
 }
+
+class NavigateToMyAdsPageEvent extends HomePageEvent {
+  @override
+  List<Object> get props => [];
+}

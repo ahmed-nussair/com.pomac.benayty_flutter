@@ -27,6 +27,7 @@ dependencies:
   file_picker: ^1.5.1
   intl: ^0.16.1
   fluttertoast: ^4.0.1
+  jiffy: ^3.0.1
   http:
   flutter:
     sdk: flutter

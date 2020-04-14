@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 
 class AdItem extends StatelessWidget {
   final int id;
@@ -21,8 +22,145 @@ class AdItem extends StatelessWidget {
     this.onItemDeleted,
   });
 
+  String _durationText(DateTime dateTime) {
+    int duration = Jiffy([DateTime
+        .now()
+        .year,
+      DateTime
+          .now()
+          .month,
+      DateTime
+          .now()
+          .day
+    ])
+        .diff(Jiffy([dateTime.year,
+      dateTime.month,
+      dateTime.day]),
+        Units.SECOND);
+
+    String durationUnit = 'ثانية';
+
+    if (duration > 60) {
+      duration = Jiffy([DateTime
+          .now()
+          .year,
+        DateTime
+            .now()
+            .month,
+        DateTime
+            .now()
+            .day
+      ])
+          .diff(Jiffy([dateTime.year,
+        dateTime.month,
+        dateTime.day]),
+          Units.MINUTE);
+      durationUnit = 'دقيقة';
+      if (duration > 60) {
+        duration = Jiffy([DateTime
+            .now()
+            .year,
+          DateTime
+              .now()
+              .month,
+          DateTime
+              .now()
+              .day
+        ])
+            .diff(Jiffy([dateTime.year,
+          dateTime.month,
+          dateTime.day]),
+            Units.HOUR);
+
+        durationUnit = 'ساعة';
+
+        if (duration > 24) {
+          duration = Jiffy([DateTime
+              .now()
+              .year,
+            DateTime
+                .now()
+                .month,
+            DateTime
+                .now()
+                .day
+          ])
+              .diff(Jiffy([dateTime.year,
+            dateTime.month,
+            dateTime.day]),
+              Units.DAY);
+
+          durationUnit = 'يوم';
+
+          if (duration > 7) {
+            duration = Jiffy([DateTime
+                .now()
+                .year,
+              DateTime
+                  .now()
+                  .month,
+              DateTime
+                  .now()
+                  .day
+            ])
+                .diff(Jiffy([dateTime.year,
+              dateTime.month,
+              dateTime.day]),
+                Units.WEEK);
+
+            durationUnit = 'أسبوع';
+
+            if (duration > 4) {
+              duration = Jiffy([DateTime
+                  .now()
+                  .year,
+                DateTime
+                    .now()
+                    .month,
+                DateTime
+                    .now()
+                    .day
+              ])
+                  .diff(Jiffy([dateTime.year,
+                dateTime.month,
+                dateTime.day]),
+                  Units.MONTH);
+
+              durationUnit = 'شهر';
+
+              if (duration > 12) {
+                duration = Jiffy([DateTime
+                    .now()
+                    .year,
+                  DateTime
+                      .now()
+                      .month,
+                  DateTime
+                      .now()
+                      .day
+                ])
+                    .diff(Jiffy([dateTime.year,
+                  dateTime.month,
+                  dateTime.day]),
+                    Units.YEAR);
+
+                durationUnit = 'سنة';
+              }
+            }
+          }
+        }
+
+        return '$duration $durationUnit';
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    DateTime _createdAt = DateTime.parse(this.createdAt);
+
+    String duration = _durationText(_createdAt);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
@@ -91,7 +229,7 @@ class AdItem extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: Text(
-                              'منذ 30 ساعة',
+                              ' منذ $duration',
                               style: TextStyle(
                                 fontFamily: 'Cairo',
                               ),

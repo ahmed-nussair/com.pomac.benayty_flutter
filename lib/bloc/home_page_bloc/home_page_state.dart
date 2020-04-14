@@ -63,3 +63,8 @@ class ChattingPageState extends HomePageState {
   @override
   List<Object> get props => [];
 }
+
+class MyAdsPageState extends HomePageState {
+  @override
+  List<Object> get props => [];
+}
