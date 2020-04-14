@@ -414,117 +414,71 @@ class _Body extends StatelessWidget {
                           ),
                         ),
 
-//                        // To add a comment
-//                        ListTile(
-//                          trailing: CircleAvatar(
-//                            backgroundImage: AssetImage('assets/testad.png'),
-//                          ),
-//                          title: Column(
-//                            crossAxisAlignment: CrossAxisAlignment.end,
-//                            children: <Widget>[
-//                              Padding(
-//                                padding: const EdgeInsets.all(8.0),
-//                                child: Text(
-//                                  'محمد حسن الراعي',
-//                                  style: TextStyle(
-//                                    fontFamily: 'Cairo',
-//                                    color: Color(0xff1f80a9),
-//                                  ),
-//                                ),
-//                              ),
-//                              GestureDetector(
-//                                onTap: () {
-//                                  showDialog(
-//                                    context: context,
-//                                    child: _AddingComment(onAddingComment:(value) {
-//
-//                                    }),
-//                                  );
-//                                },
-//                                child: Container(
-//                                  decoration: BoxDecoration(
-//                                    borderRadius: BorderRadius.circular(20.0),
-//                                    border: Border.all(
-//                                      width: 1,
-//                                      color: Colors.grey,
-//                                    ),
-//                                  ),
-//                                  alignment: Alignment.centerRight,
-//                                  child: Padding(
-//                                    padding: const EdgeInsets.only(
-//                                      right: 8.0,
-//                                      left: 8.0,
-//                                      top: 8.0,
-//                                      bottom: 20.0,
-//                                    ),
-//                                    child: Text(
-//                                      'اكتب تعليقًا',
-//                                      style: TextStyle(
-//                                        fontFamily: 'Cairo',
-//                                      ),
-//                                    ),
-//                                  ),
-//                                ),
-//                              ),
-//                            ],
-//                          ),
-//                        ),
+                        Divider(),
 
                         // comments
                         Column(
                           children: List.generate(commentsList.length, (index) {
-                            return ListTile(
-                              trailing: FutureBuilder(
-                                future: Globals.isImageUrlWell(
-                                    commentsList[index]['imagePath']),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.done) {
-                                    if (snapshot.hasData) {
-                                      bool isGoodImageUrl = snapshot.data;
+                            return Column(
+                              children: <Widget>[
+                                ListTile(
+                                  trailing: FutureBuilder(
+                                    future: Globals.isImageUrlWell(
+                                        commentsList[index]['imagePath']),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                        if (snapshot.hasData) {
+                                          bool isGoodImageUrl = snapshot.data;
 
-                                      if (isGoodImageUrl) {
+                                          if (isGoodImageUrl) {
+                                            return CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                  commentsList[index]['imagePath']),
+                                            );
+                                          }
+
+                                          return CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                                'assets/default_user.png'),
+                                          );
+                                        }
                                         return CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              commentsList[index]['imagePath']),
+                                          backgroundImage: AssetImage(
+                                              'assets/default_user.png'),
                                         );
                                       }
-                                      return SizedBox(
-                                        child: Icon(Icons.error),
-                                        width: 30,
-                                        height: 30,
-                                      );
-                                    }
-                                    return SizedBox(
-                                      child: Icon(Icons.error),
-                                      width: 30,
-                                      height: 30,
-                                    );
-                                  }
-                                  return CircularProgressIndicator();
-                                },
-                              ),
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      commentsList[index]['user']['name'],
-                                      style: TextStyle(
-                                        fontFamily: 'Cairo',
-                                        color: Color(0xff1f80a9),
+                                      return CircularProgressIndicator();
+                                    },
+                                  ),
+                                  title: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          commentsList[index]['user']['name'],
+                                          style: TextStyle(
+                                            fontFamily: 'Cairo',
+                                            color: Color(0xff1f80a9),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          commentsList[index]['comment'],
+                                          style: TextStyle(
+                                            fontFamily: 'Cairo',
+                                          ),
+                                        ),
+                                      ),
+
+                                    ],
                                   ),
-                                  Text(
-                                    commentsList[index]['comment'],
-                                    style: TextStyle(
-                                      fontFamily: 'Cairo',
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                                Divider(),
+                              ],
                             );
                           }),
                         ),
