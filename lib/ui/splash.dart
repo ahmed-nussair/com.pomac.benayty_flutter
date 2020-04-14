@@ -41,10 +41,10 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     _animation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.linear))
       ..addStatusListener((status) async {
       if(status == AnimationStatus.completed){
-//        SharedPreferences prefs = await SharedPreferences.getInstance();
-//
-//        String token = prefs.getString('token') ?? '';
-//        Globals.token = token;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        String token = prefs.getString('token') ?? '';
+        Globals.token = token;
 
         Timer(Duration(seconds: 1), () =>
             Navigator.of(context).pushReplacement(
