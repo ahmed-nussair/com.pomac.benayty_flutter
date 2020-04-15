@@ -97,6 +97,7 @@ class Home extends StatelessWidget {
       create: (_) => HomePageBloc()..add(NavigateToHomePageEvent()),
       child: BlocBuilder<HomePageBloc, HomePageState>(
         builder: (context, state) {
+          // for drawer
           List _drawerItems = [
             _drawerItem(Icons.home, 'الصفحة الرئيسية', () {
               BlocProvider.of<HomePageBloc>(context)
@@ -152,9 +153,12 @@ class Home extends StatelessWidget {
               }
             }),
           ];
+
           return SafeArea(
             child: Scaffold(
               key: _key,
+
+              // drawer
               endDrawer: Drawer(
                 child: Column(
                   children: <Widget>[
@@ -178,6 +182,8 @@ class Home extends StatelessWidget {
                   ],
                 ),
               ),
+
+              // app bar
               appBar: AppBar(
                 leading: state is SecondaryPageState ||
                         state is AddAdvertisementPage1State ||
@@ -254,16 +260,22 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ),
-              body: state is MainPageState
+
+              // body
+              body:
+              // if in main page state, navigate to main page
+              state is MainPageState
                   ? HomePage(
-                      showSecondaryCategoriesFunction:
-                          (int value, String title) {
-                        _mainCategoryId = value;
-                        _mainCategoryTitle = title;
-                        BlocProvider.of<HomePageBloc>(context)
-                            .add(NavigateToSecondaryPageEvent());
-                      },
-                    )
+                showSecondaryCategoriesFunction:
+                    (int value, String title) {
+                  _mainCategoryId = value;
+                  _mainCategoryTitle = title;
+                  BlocProvider.of<HomePageBloc>(context)
+                      .add(NavigateToSecondaryPageEvent());
+                },
+              )
+
+              // if in wish list state, navigate to wish list
                   : state is WishListPageState
                   ? WishListPage(
                 onItemClicked: (id, title) {
@@ -274,12 +286,17 @@ class Home extends StatelessWidget {
                       .add(NavigateToAdDescription());
                 },
               )
+
+              // if in contact us state, navigate to contact us page
                   : state is ContactUsState
                   ? ContactUs()
+
+              // if in search page state, navigate to search page
                   : state is SearchPageState
                   ? SearchPage(
                 mainItemId: _mainItemIdForSearch,
-                secondaryItemId: _secondaryItemIdForSearch,
+                secondaryItemId:
+                _secondaryItemIdForSearch,
                 areaId: _areaIdForSearch,
                 cityId: _cityIdForSearch,
                 onItemSelected: (id, title) {
@@ -291,40 +308,57 @@ class Home extends StatelessWidget {
                       .add(NavigateToAdDescription());
                 },
               )
+
+              // if in secondary categories page state, navigate to secondary categories page
                   : state is SecondaryPageState
                   ? SecondaryPage(
                 mainCategoryId: _mainCategoryId,
-                onSearch: (mainId, secondaryId, areaId,
-                    cityId) {
+                onSearch: (mainId, secondaryId,
+                    areaId, cityId) {
                   _mainItemIdForSearch = mainId;
-                  _secondaryItemIdForSearch = secondaryId;
+                  _secondaryItemIdForSearch =
+                      secondaryId;
                   _areaIdForSearch = areaId;
                   _cityIdForSearch = cityId;
-                  BlocProvider.of<HomePageBloc>(context)
-                      .add(NavigateToSearchPageEvent());
+                  BlocProvider.of<HomePageBloc>(
+                      context)
+                      .add(
+                      NavigateToSearchPageEvent());
                 },
                 onBackPressed: () =>
-                    BlocProvider.of<HomePageBloc>(context)
+                    BlocProvider.of<
+                        HomePageBloc>(context)
                         .add(NavigateToHomePageEvent()),
               )
+
+              // If in notifications page state, navigate to notifications page
                   : state is NotificationsPageState
                   ? NotificationsPage()
+
+              // If in messages page state, navigate to messages page
                   : state is MessagesPageState
                   ? MessagesPage(
-                onChatting: (userId, userName) {
+                onChatting:
+                    (userId, userName) {
                   _userIdForChatting = userId;
-                  _userNameForChatting = userName;
+                  _userNameForChatting =
+                      userName;
                   EventsStack.push(
                       NavigateToMessagesPageEvent());
-                  BlocProvider.of<HomePageBloc>(
+                  BlocProvider.of<
+                      HomePageBloc>(
                       context)
                       .add(
                       NavigateToChattingPageEvent());
                 },
               )
-                  : state is AddAdvertisementPage1State
+
+              // If in adding an add page 1 state, navigate to adding add page 1
+                  : state
+              is AddAdvertisementPage1State
                   ? AddAdvertisementPage1(
-                onNextPage: (int mainItemId,
+                onNextPage: (int
+                mainItemId,
                     int secondaryItemId,
                     int areaId,
                     int cityId) {
@@ -332,8 +366,10 @@ class Home extends StatelessWidget {
                       mainItemId;
                   _secondaryItemIdForAdAdded =
                       secondaryItemId;
-                  _areaIdForAdAdded = areaId;
-                  _cityIdForAdAdded = cityId;
+                  _areaIdForAdAdded =
+                      areaId;
+                  _cityIdForAdAdded =
+                      cityId;
 
                   BlocProvider.of<
                       HomePageBloc>(
@@ -342,6 +378,8 @@ class Home extends StatelessWidget {
                       NavigateToAdvertiseAddingPage2());
                 },
               )
+
+              // If in adding an add page 2 state, navigate to adding add page 2
                   : state
               is AddAdvertisementPage2State
                   ? AddAdvertisementPage2(
@@ -349,9 +387,12 @@ class Home extends StatelessWidget {
                 _mainItemIdForAdAdded,
                 secondaryItemId:
                 _secondaryItemIdForAdAdded,
-                areaId: _areaIdForAdAdded,
-                cityId: _cityIdForAdAdded,
-                onSentSuccessfully: () {
+                areaId:
+                _areaIdForAdAdded,
+                cityId:
+                _cityIdForAdAdded,
+                onSentSuccessfully:
+                    () {
                   BlocProvider.of<
                       HomePageBloc>(
                       context)
@@ -359,7 +400,10 @@ class Home extends StatelessWidget {
                       NavigateToHomePageEvent());
                 },
               )
-                  : state is AdDescriptionState
+
+              // If in ad description state, navigate to ad description page
+                  : state
+              is AdDescriptionState
                   ? AdDescription(
                 adId: _adId,
                 onMessage: (userId,
@@ -377,30 +421,36 @@ class Home extends StatelessWidget {
                       NavigateToChattingPageEvent());
                 },
               )
+
+              //If in chatting page state, navigate to chatting page
                   : state
               is ChattingPageState
                   ? ChattingPage(
                 userId:
                 _userIdForChatting,
               )
+
+              // If in my ads state, navigate to my ads page
                   : state
               is MyAdsPageState
-                  ? MyAds(
-                  onItemSelected:
-                      (id,
-                      title) {
-                    _adId = id;
-                    _adName =
-                        title;
-                    EventsStack.push(
-                        NavigateToMyAdsPageEvent());
-                    BlocProvider.of<
-                        HomePageBloc>(
-                        context)
-                        .add(
-                        NavigateToAdDescription());
-                  })
+                  ? MyAds(onItemSelected:
+                  (id,
+                  title) {
+                _adId =
+                    id;
+                _adName =
+                    title;
+                EventsStack
+                    .push(
+                    NavigateToMyAdsPageEvent());
+                BlocProvider.of<HomePageBloc>(
+                    context)
+                    .add(
+                    NavigateToAdDescription());
+              })
                   : Container(),
+
+              // Bottom navigation bar
               bottomNavigationBar: Stack(
                 overflow: Overflow.visible,
                 alignment: FractionalOffset(0.5, 1.0),
@@ -415,6 +465,8 @@ class Home extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
+
+                              // messages button
                               GestureDetector(
                                 child: state is MessagesPageState
                                     ? Container(
@@ -438,6 +490,8 @@ class Home extends StatelessWidget {
                                       .add(NavigateToMessagesPageEvent());
                                 },
                               ),
+
+                              // notifications button
                               GestureDetector(
                                   onTap: () {
                                     BlocProvider.of<HomePageBloc>(context).add(
@@ -468,6 +522,8 @@ class Home extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
+
+                              // wish list button
                               GestureDetector(
                                 onTap: () {
                                   BlocProvider.of<HomePageBloc>(context)
@@ -491,6 +547,8 @@ class Home extends StatelessWidget {
                                         color: Color(0xff1f80a9),
                                       ),
                               ),
+
+                              // main page button
                               GestureDetector(
                                 onTap: () {
                                   BlocProvider.of<HomePageBloc>(context)
@@ -529,6 +587,8 @@ class Home extends StatelessWidget {
                       ],
                     ),
                   ),
+
+                  // Adding ad button
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: Material(
