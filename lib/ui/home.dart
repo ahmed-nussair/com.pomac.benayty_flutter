@@ -1,3 +1,4 @@
+
 import 'package:benayty/bloc/home_page_bloc/bloc.dart';
 import 'package:benayty/ui/home_pages/chatting_page.dart';
 import 'package:benayty/ui/home_pages/home_page.dart';
@@ -93,6 +94,7 @@ class Home extends StatelessWidget {
     String _userIdForChatting = '';
     String _userNameForChatting = '';
 
+
     return BlocProvider(
       create: (_) => HomePageBloc()..add(NavigateToHomePageEvent()),
       child: BlocBuilder<HomePageBloc, HomePageState>(
@@ -119,11 +121,11 @@ class Home extends StatelessWidget {
               BlocProvider.of<HomePageBloc>(context)
                   .add(NavigateToWishListPageEvent());
             }),
-//            _drawerItem(Icons.phone, 'اتصل بنا', () {
-//              BlocProvider.of<HomePageBloc>(context)
-//                  .add(NavigateToContactUsPage());
-//              Navigator.of(context).pop();
-//            }),
+            _drawerItem(Icons.phone, 'اتصل بنا', () {
+              BlocProvider.of<HomePageBloc>(context)
+                  .add(NavigateToContactUsPage());
+              Navigator.of(context).pop();
+            }),
             _drawerItem(Icons.exit_to_app, 'تسجيل الدخول / الخروج', () async {
               Navigator.of(context).pop();
               if (Globals.token.isEmpty) {
@@ -625,3 +627,5 @@ class Home extends StatelessWidget {
     );
   }
 }
+
+

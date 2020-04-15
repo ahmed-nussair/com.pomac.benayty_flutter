@@ -36,37 +36,42 @@ class _Body extends StatelessWidget {
 
   _Body({@required this.adId, @required this.onMessage});
 
-  Widget _adButton(IconData icon, Function function) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: 8.0,
-        bottom: 8.0,
-        left: 20.0,
-        right: 20.0,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Color(0xff1f80a9),
-          width: 1,
-        ),
-      ),
+  Widget _adButton(IconData icon, Function function, String tooltipMessage) {
+    return Tooltip(
+      message: tooltipMessage,
       child: GestureDetector(
         onTap: () {
           function();
         },
-        child: Icon(
-          icon,
-          color: Color(0xff1f80a9),
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 8.0,
+            bottom: 8.0,
+            left: 20.0,
+            right: 20.0,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: Color(0xff1f80a9),
+              width: 1,
+            ),
+          ),
+          child: Icon(
+            icon,
+            color: Color(0xff1f80a9),
+          ),
         ),
       ),
     );
   }
 
   _showDialog(BuildContext context) {
-    showDialog(context: context,
+    showDialog(
+      context: context,
       child: AlertDialog(
-        title: Text('قم بتسجيل الدخول حتى يمكنك القيام بهذه العملية',
+        title: Text(
+          'قم بتسجيل الدخول حتى يمكنك القيام بهذه العملية',
           style: TextStyle(
             fontFamily: 'Cairo',
           ),
@@ -84,8 +89,8 @@ class _Body extends StatelessWidget {
             child: GestureDetector(
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => Login()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => Login()));
               },
               child: Text('تسجيل الدخول'),
             ),
@@ -94,6 +99,7 @@ class _Body extends StatelessWidget {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Response>(
@@ -227,9 +233,44 @@ class _Body extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
+                              // Add comment
+                              _adButton(Icons.comment, () {
+                                if (Globals.token.isNotEmpty) {
+                                  // add a comment
+                                  showDialog(
+                                    context: context,
+                                    child: _AddingComment(
+                                      onAddingComment: (value) async {
+                                        var response = await Provider.of<
+                                            AdvertisementService>(
+                                          context,
+                                          listen: false,
+                                        ).addComment({
+                                          'token': Globals.token,
+                                          'advertisement_id': '$adId',
+                                          'comment': value,
+                                        });
+                                        print(response.bodyString);
+                                        final data =
+                                        json.decode(response.bodyString);
+                                        Fluttertoast.showToast(
+                                            msg: data['message'],
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.grey,
+                                            textColor: Colors.white,
+                                            fontSize: 16.0);
+                                      },
+                                    ),
+                                  );
+                                } else {
+                                  _showDialog(context);
+                                }
+                              }, 'أضف تعليقًا'),
 
                               // Add to wishlist
-                              _adButton(Icons.favorite, () async {
+                              _adButton(Icons.favorite_border, () async {
                                 String _result = '';
                                 bool done = false;
                                 if (Globals.token.isNotEmpty) {
@@ -272,7 +313,8 @@ class _Body extends StatelessWidget {
                                             child: done &&
                                                 Globals.token.isNotEmpty
                                                 ? CircleAvatar(
-                                              backgroundColor: Colors.green,
+                                              backgroundColor:
+                                              Colors.green,
                                               child: Icon(
                                                 Icons.done,
                                                 color: Colors.white,
@@ -309,7 +351,8 @@ class _Body extends StatelessWidget {
                                               Navigator.of(context).pop();
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
-                                                      builder: (context) =>
+                                                      builder:
+                                                          (context) =>
                                                           Login()));
                                             },
                                             child: Text(
@@ -324,66 +367,22 @@ class _Body extends StatelessWidget {
                                 } else {
                                   _showDialog(context);
                                 }
+                              }, 'أضف إلى المفضلة'),
 
-
-                              }),
-
-                              // Add comment
-                              _adButton(
-                                Icons.comment,
-                                    () {
-                                  if (Globals.token.isNotEmpty) {
-                                    // add a comment
-                                    showDialog(
-                                      context: context,
-                                      child: _AddingComment(
-                                        onAddingComment: (value) async {
-                                          var response = await Provider.of<
-                                              AdvertisementService>(
-                                            context, listen: false,).addComment(
-                                              {
-                                                'token': Globals.token,
-                                                'advertisement_id': '$adId',
-                                                'comment': value,
-                                              });
-                                          print(response.bodyString);
-                                          final data = json.decode(
-                                              response.bodyString);
-                                          Fluttertoast.showToast(
-                                              msg: data['message'],
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.CENTER,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.grey,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  } else {
-                                    _showDialog(context);
-                                  }
-                                },
-                              ),
-
-                              // Share ad
-                              _adButton(Icons.share, () {
-                                print('Share Icon Clicked');
-                              }),
+//                              // Share ad
+//                              _adButton(Icons.share, () {
+//                                print('Share Icon Clicked');
+//                              }),
 
                               // Message to ad owner
-                              _adButton(
-                                MyIcons.comment,
-                                    () {
-                                  if (Globals.token.isNotEmpty) {
-                                    onMessage('${data['user_id']}',
-                                        data['user']['name']);
-                                  } else {
-                                    _showDialog(context);
-                                  }
-                                },
-                              ),
+                              _adButton(MyIcons.comment_empty, () {
+                                if (Globals.token.isNotEmpty) {
+                                  onMessage('${data['user_id']}',
+                                      data['user']['name']);
+                                } else {
+                                  _showDialog(context);
+                                }
+                              }, 'مراسلة صاحب الإعلان'),
                             ],
                           ),
                         ),
@@ -434,7 +433,8 @@ class _Body extends StatelessWidget {
                                           if (isGoodImageUrl) {
                                             return CircleAvatar(
                                               backgroundImage: NetworkImage(
-                                                  commentsList[index]['imagePath']),
+                                                  commentsList[index]
+                                                  ['imagePath']),
                                             );
                                           }
 
@@ -473,7 +473,6 @@ class _Body extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-
                                     ],
                                   ),
                                 ),
@@ -505,7 +504,6 @@ class _Body extends StatelessWidget {
 }
 
 class _AddingComment extends StatefulWidget {
-
   final Function(String) onAddingComment;
 
   _AddingComment({@required this.onAddingComment});
@@ -540,7 +538,6 @@ class _AddingCommentState extends State<_AddingComment> {
         ),
       ),
       actions: <Widget>[
-
         // close
         Padding(
           padding: const EdgeInsets.all(8.0),

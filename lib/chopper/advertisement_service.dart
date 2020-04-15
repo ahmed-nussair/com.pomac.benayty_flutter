@@ -25,6 +25,9 @@ abstract class AdvertisementService extends ChopperService {
   @Post(path: '/comment/add')
   Future<Response> addComment(@Body() Map<String, dynamic> body);
 
+  @Get(path: '/users/show')
+  Future<Response> getUserAd(@Query('user_id') int userId);
+
   static AdvertisementService create() {
     var client = ChopperClient(
       baseUrl: 'https://pomac.info',
