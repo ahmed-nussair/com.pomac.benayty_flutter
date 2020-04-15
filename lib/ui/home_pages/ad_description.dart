@@ -13,9 +13,12 @@ import 'package:benayty/chopper/advertisement_service.dart';
 
 class AdDescription extends StatelessWidget {
   final int adId;
+  final Function(int, String) onDisplayUserAds;
   final Function(String, String) onMessage;
+  final bool openedFromUserAds;
 
-  AdDescription({@required this.adId, @required this.onMessage});
+  AdDescription(
+      {@required this.adId, @required this.onMessage, @required this.onDisplayUserAds, this.openedFromUserAds = false});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,9 @@ class AdDescription extends StatelessWidget {
       dispose: (_, AdvertisementService service) => service.client.dispose(),
       child: _Body(
         adId: adId,
+        onDisplayUserAds: onDisplayUserAds,
         onMessage: onMessage,
+        openedFromUserAds: openedFromUserAds,
       ),
     );
   }
@@ -32,9 +37,12 @@ class AdDescription extends StatelessWidget {
 
 class _Body extends StatelessWidget {
   final int adId;
+  final Function(int, String) onDisplayUserAds;
   final Function(String, String) onMessage;
+  final bool openedFromUserAds;
 
-  _Body({@required this.adId, @required this.onMessage});
+  _Body(
+      {@required this.adId, @required this.onMessage, @required this.onDisplayUserAds, this.openedFromUserAds = false});
 
   Widget _adButton(IconData icon, Function function, String tooltipMessage) {
     return Tooltip(
@@ -129,72 +137,77 @@ class _Body extends StatelessWidget {
             resizeToAvoidBottomInset: false,
             body: Column(
               children: <Widget>[
-                Material(
-                  elevation: 10,
-                  shadowColor: Colors.grey,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              data['phone'],
-                              style: TextStyle(
-                                fontFamily: 'Cairo',
+                openedFromUserAds == false ? GestureDetector(
+                  onTap: () {
+                    onDisplayUserAds(data['user_id'], data['user']['name']);
+                  },
+                  child: Material(
+                    elevation: 10,
+                    shadowColor: Colors.grey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                data['phone'],
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: Color(0xff1f80a9),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(5.0),
+                              ),
+                              Icon(
+                                Icons.phone,
                                 color: Color(0xff1f80a9),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(5.0),
-                            ),
-                            Icon(
-                              Icons.phone,
-                              color: Color(0xff1f80a9),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              data['area'],
-                              style: TextStyle(
-                                fontFamily: 'Cairo',
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                data['area'],
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: Color(0xff1f80a9),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(5.0),
+                              ),
+                              Icon(
+                                Icons.location_on,
                                 color: Color(0xff1f80a9),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(5.0),
-                            ),
-                            Icon(
-                              Icons.location_on,
-                              color: Color(0xff1f80a9),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              data['user']['name'],
-                              style: TextStyle(
-                                fontFamily: 'Cairo',
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Text(
+                                data['user']['name'],
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  color: Color(0xff1f80a9),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(5.0),
+                              ),
+                              Icon(
+                                Icons.person,
                                 color: Color(0xff1f80a9),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(5.0),
-                            ),
-                            Icon(
-                              Icons.person,
-                              color: Color(0xff1f80a9),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                ) : Container(),
                 Expanded(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width,

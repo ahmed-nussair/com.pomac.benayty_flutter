@@ -63,8 +63,16 @@ class _$AdvertisementService extends AdvertisementService {
   }
 
   @override
-  Future<Response<dynamic>> getUserAd(int userId) {
+  Future<Response<dynamic>> getUserData(int userId) {
     final $url = '/benaity/public/api/users/show';
+    final $params = <String, dynamic>{'user_id': userId};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> getUserAds(int userId) {
+    final $url = '/benaity/public/api/users/advertisements';
     final $params = <String, dynamic>{'user_id': userId};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);

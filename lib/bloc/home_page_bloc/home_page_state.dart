@@ -68,3 +68,8 @@ class MyAdsPageState extends HomePageState {
   @override
   List<Object> get props => [];
 }
+
+class UserAdsPageState extends HomePageState {
+  @override
+  List<Object> get props => [];
+}

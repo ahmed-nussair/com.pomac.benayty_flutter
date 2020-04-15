@@ -1,4 +1,3 @@
-
 import 'package:benayty/bloc/home_page_bloc/bloc.dart';
 import 'package:benayty/ui/home_pages/chatting_page.dart';
 import 'package:benayty/ui/home_pages/home_page.dart';
@@ -21,6 +20,7 @@ import 'home_pages/ad_description.dart';
 import 'home_pages/add_advertisement_pages/add_advertisement_page_1.dart';
 import 'home_pages/add_advertisement_pages/add_advertisement_page_2.dart';
 import 'home_pages/contact_us.dart';
+import 'home_pages/user_ads.dart';
 import 'login.dart';
 
 class Home extends StatelessWidget {
@@ -78,6 +78,7 @@ class Home extends StatelessWidget {
     int _mainCategoryId = 0;
     String _mainCategoryTitle = '';
     String _adName = '';
+    String _adUserName = '';
 
     int _mainItemIdForAdAdded = -1;
     int _secondaryItemIdForAdAdded = -1;
@@ -89,11 +90,11 @@ class Home extends StatelessWidget {
     int _areaIdForSearch = -1;
     int _cityIdForSearch = -1;
 
+    int _userId = -1;
     int _adId = -1;
 
     String _userIdForChatting = '';
     String _userNameForChatting = '';
-
 
     return BlocProvider(
       create: (_) => HomePageBloc()..add(NavigateToHomePageEvent()),
@@ -218,6 +219,16 @@ class Home extends StatelessWidget {
                             .add(EventsStack.pop()),
                   ),
                 )
+                    : state is UserAdsPageState
+                    ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Icon(Icons.arrow_back_ios),
+                    onTap: () =>
+                        BlocProvider.of<HomePageBloc>(context)
+                            .add(EventsStack.pop()),
+                  ),
+                )
                     : Container(),
                 actions: <Widget>[
                   Padding(
@@ -240,6 +251,8 @@ class Home extends StatelessWidget {
                               ? 'المفضلة'
                       : state is ContactUsState
                       ? 'اتصل بنا'
+                      : state is UserAdsPageState
+                      ? _adUserName
                       : state is MyAdsPageState
                       ? 'إعلاناتي'
                       : state is MessagesPageState
@@ -407,7 +420,28 @@ class Home extends StatelessWidget {
                   : state
               is AdDescriptionState
                   ? AdDescription(
+                openedFromUserAds:
+                !(EventsStack
+                    .top()
+                is NavigateToUserAdsPageEvent)
+                    ? false
+                    : true,
                 adId: _adId,
+                onDisplayUserAds:
+                    (userId,
+                    adUserName) {
+                  _userId =
+                      userId;
+                  _adUserName =
+                      adUserName;
+                  EventsStack.push(
+                      NavigateToAdDescription());
+                  BlocProvider.of<
+                      HomePageBloc>(
+                      context)
+                      .add(
+                      NavigateToUserAdsPageEvent());
+                },
                 onMessage: (userId,
                     userName) {
                   _userIdForChatting =
@@ -431,7 +465,23 @@ class Home extends StatelessWidget {
                 userId:
                 _userIdForChatting,
               )
-
+                  : state
+              is UserAdsPageState
+                  ? UserAds(
+                  userId:
+                  _userId,
+                  onItemSelected:
+                      (id,
+                      title) {
+                    _adId =
+                        id;
+                    _adName =
+                        title;
+                    EventsStack.push(
+                        NavigateToUserAdsPageEvent());
+                    BlocProvider.of<HomePageBloc>(context)
+                        .add(NavigateToAdDescription());
+                  })
               // If in my ads state, navigate to my ads page
                   : state
               is MyAdsPageState
@@ -442,13 +492,10 @@ class Home extends StatelessWidget {
                     id;
                 _adName =
                     title;
-                EventsStack
-                    .push(
+                EventsStack.push(
                     NavigateToMyAdsPageEvent());
-                BlocProvider.of<HomePageBloc>(
-                    context)
-                    .add(
-                    NavigateToAdDescription());
+                BlocProvider.of<HomePageBloc>(context)
+                    .add(NavigateToAdDescription());
               })
                   : Container(),
 
@@ -467,7 +514,6 @@ class Home extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
-
                               // messages button
                               GestureDetector(
                                 child: state is MessagesPageState
@@ -524,7 +570,6 @@ class Home extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
-
                               // wish list button
                               GestureDetector(
                                 onTap: () {
@@ -627,5 +672,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-
-
