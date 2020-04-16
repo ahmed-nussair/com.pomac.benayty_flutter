@@ -29,6 +29,7 @@ dependencies:
   fluttertoast: ^4.0.1
   jiffy: ^3.0.1
   path_provider: ^1.6.5
+  connectivity: ^0.4.8+2
   http:
   flutter:
     sdk: flutter

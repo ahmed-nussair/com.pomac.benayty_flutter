@@ -282,7 +282,8 @@ class Home extends StatelessWidget {
               state is MainPageState
                   ? HomePage(
                 showSecondaryCategoriesFunction:
-                    (int value, String title) {
+                    (int value, String title) async {
+
                   _mainCategoryId = value;
                   _mainCategoryTitle = title;
                   BlocProvider.of<HomePageBloc>(context)

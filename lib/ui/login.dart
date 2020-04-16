@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:benayty/chopper/credentials_service.dart';
 import 'package:benayty/ui/forgot_password.dart';
 import 'package:benayty/ui/register.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -211,6 +212,39 @@ class _LoginState extends State<LoginBody> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () async{
+                              var connectivityResult =
+                              await (Connectivity().checkConnectivity());
+                              if (connectivityResult !=
+                                  ConnectivityResult.mobile &&
+                                  connectivityResult !=
+                                      ConnectivityResult.wifi) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: Container(
+                                          child: Text(
+                                            'يجب عليك الاتصال بالإنترنت لكي تتمكن من تسجيل الدخول',
+                                            textAlign: TextAlign.right,
+                                            style: TextStyle(
+                                              fontFamily: 'Cairo',
+                                            ),
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: GestureDetector(
+                                              onTap: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: Text('إغلاق'),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                                return;
+                              }
                               setState(() {
                                 _loggingIn = true;
                               });
@@ -246,7 +280,6 @@ class _LoginState extends State<LoginBody> {
                                 Navigator.of(context).pop();
                                 if (widget.onLogin != null)
                                   widget.onLogin();
-
                               } else {
                                 _mobileTextController.clear();
                                 _passwordTextController.clear();

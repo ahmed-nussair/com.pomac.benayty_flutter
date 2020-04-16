@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:benayty/chopper/contact_service.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -263,30 +264,18 @@ class __BodyState extends State<_Body> {
                     child: GestureDetector(
                       onTap: () async {
                         FocusScope.of(context).requestFocus(FocusNode());
-                        if (_formKey.currentState.validate()) {
-                          setState(() {
-                            _sending = true;
-                          });
-                          final response = await Provider.of<ContactService>(
-                              context, listen: false).contactUs({
-                            'name': _userNameController.text,
-                            'email': _emailController.text,
-                            'phone': _mobileController.text,
-                            'subject': _titleController.text,
-                            'message': _contentController.text,
-                          });
-
-                          setState(() {
-                            _sending = false;
-                          });
-
-                          final data = json.decode(response.bodyString);
-
-                          showDialog(context: context,
+                        var connectivityResult =
+                        await (Connectivity().checkConnectivity());
+                        if (connectivityResult != ConnectivityResult.mobile &&
+                            connectivityResult != ConnectivityResult.wifi) {
+                          showDialog(
+                              context: context,
                               builder: (context) {
                                 return AlertDialog(
                                   content: Container(
-                                    child: Text(data['message'],
+                                    child: Text(
+                                      'تحتاج إلى الاتصال بالإنترنت قبل إرسال الرسالة',
+                                      textAlign: TextAlign.right,
                                       style: TextStyle(
                                         fontFamily: 'Cairo',
                                       ),
@@ -303,8 +292,54 @@ class __BodyState extends State<_Body> {
                                     ),
                                   ],
                                 );
-                              }
-                          );
+                              });
+                          return;
+                        }
+                        if (_formKey.currentState.validate()) {
+                          setState(() {
+                            _sending = true;
+                          });
+                          final response = await Provider.of<ContactService>(
+                              context,
+                              listen: false)
+                              .contactUs({
+                            'name': _userNameController.text,
+                            'email': _emailController.text,
+                            'phone': _mobileController.text,
+                            'subject': _titleController.text,
+                            'message': _contentController.text,
+                          });
+
+                          setState(() {
+                            _sending = false;
+                          });
+
+                          final data = json.decode(response.bodyString);
+
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Container(
+                                    child: Text(
+                                      data['message'],
+                                      style: TextStyle(
+                                        fontFamily: 'Cairo',
+                                      ),
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text('إغلاق'),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
                         }
                       },
                       child: Container(
@@ -329,7 +364,8 @@ class __BodyState extends State<_Body> {
             ),
           ],
         ),
-        _sending ? Positioned(
+        _sending
+            ? Positioned(
           right: 0.0,
           left: 0.0,
           top: 0.0,

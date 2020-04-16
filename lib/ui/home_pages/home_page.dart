@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:benayty/chopper/main_categories_service.dart';
 import 'package:chopper/chopper.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -43,56 +44,79 @@ class _HomePageBody extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasError || snapshot.data.isEmpty) {
-            print('Nothing');
-            return FutureBuilder<Response>(
-              future: Provider.of<MainCategoriesService>(context)
-                  .getMainCategories(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  final data = json.decode(snapshot.data.bodyString);
-                  final List categoriesList = data['data'];
-                  writeData(snapshot.data.bodyString);
-                  return CustomScrollView(
-                    slivers: <Widget>[
-                      SliverPadding(
-                        padding: EdgeInsets.all(8.0),
-                        sliver: SliverGrid.count(
-                          crossAxisCount: 2,
-                          childAspectRatio: .7,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 1,
-                          children: List.generate(
-                              categoriesList.length, (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                showSecondaryCategoriesFunction(
-                                    categoriesList[index]['id'],
-                                    categoriesList[index]['name']);
-                              },
-                              child: Item(title: categoriesList[index]['name'],
-                                image: categoriesList[index]['imagePath'],
-                                function: () {},
-                                length: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width / 2.3,),
+            return FutureBuilder<ConnectivityResult>(
+                future: Connectivity().checkConnectivity(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    var connectivityResult = snapshot.data;
+
+                    if (connectivityResult == ConnectivityResult.mobile ||
+                        connectivityResult == ConnectivityResult.wifi) {
+                      return FutureBuilder<Response>(
+                        future: Provider.of<MainCategoriesService>(context)
+                            .getMainCategories(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            final data = json.decode(snapshot.data.bodyString);
+                            final List categoriesList = data['data'];
+                            writeData(snapshot.data.bodyString);
+                            return CustomScrollView(
+                              slivers: <Widget>[
+                                SliverPadding(
+                                  padding: EdgeInsets.all(8.0),
+                                  sliver: SliverGrid.count(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: .7,
+                                    crossAxisSpacing: 5,
+                                    mainAxisSpacing: 1,
+                                    children: List.generate(
+                                        categoriesList.length, (index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          showSecondaryCategoriesFunction(
+                                              categoriesList[index]['id'],
+                                              categoriesList[index]['name']);
+                                        },
+                                        child: Item(
+                                          title: categoriesList[index]['name'],
+                                          image: categoriesList[index]['imagePath'],
+                                          function: () {},
+                                          length: MediaQuery
+                                              .of(context)
+                                              .size
+                                              .width / 2.3,),
+                                      );
+                                    }),
+                                  ),
+                                )
+                              ],
                             );
-                          }),
+                          }
+                          return Container(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                CircularProgressIndicator(),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: Text(
+                          'تحتاج إلى الاتصال بالإنترنت قبل مشاهدة المحتوى',
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                          ),
                         ),
-                      )
-                    ],
-                  );
+                      );
+                    }
+                  }
+                  return Container();
                 }
-                return Container(
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CircularProgressIndicator(),
-                    ],
-                  ),
-                );
-              },
             );
           }
           final data = json.decode(snapshot.data);
@@ -108,7 +132,38 @@ class _HomePageBody extends StatelessWidget {
                   mainAxisSpacing: 1,
                   children: List.generate(categoriesList.length, (index){
                     return GestureDetector(
-                      onTap: (){
+                      onTap: () async {
+                        var connectivityResult =
+                        await (Connectivity().checkConnectivity());
+                        if (connectivityResult != ConnectivityResult.mobile &&
+                            connectivityResult != ConnectivityResult.wifi) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: Container(
+                                    child: Text(
+                                      'يجب عليك أولا الاتصال بالإنترنت',
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontFamily: 'Cairo',
+                                      ),
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () =>
+                                            Navigator.of(context).pop(),
+                                        child: Text('إغلاق'),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
+                          return;
+                        }
                         showSecondaryCategoriesFunction(categoriesList[index]['id'], categoriesList[index]['name']);
                       },
                       child: Item(title: categoriesList[index]['name'],
