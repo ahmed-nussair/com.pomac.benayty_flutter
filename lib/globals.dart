@@ -13,8 +13,9 @@ class Globals {
   static int chattingTimestamp = 4294967296;
 
   static final String serverToken = 'AAAAzjukw_w:APA91bHFsGpdzB9qNKXUaxrKgEzFxf'
-      'P93dsP59fSs4NneSwmcfmpiySd8M6N-2Lr0ZpJWjClt8hU-aoWXh7dL7wiWSqdePmPTrcEz'
-      'EDQaG9QIgH8RHgVvoAx5PkDiHor3BSHONBqpZNQ';
+      'P93dsP59fSs4NneSwmcfmpiySd8M6N-2Lr0ZpJWj'
+      'Clt8hU-aoWXh7dL7wiWSqdePmPTrcEzEDQaG9QIg'
+      'H8RHgVvoAx5PkDiHor3BSHONBqpZNQ';
   static final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
@@ -75,11 +76,15 @@ class Globals {
   }
 
   static Future<bool> isImageUrlWell(String imageUrl) async {
-    var response = await http.get(imageUrl,);
-    if (response.statusCode == 200) {
-      return true;
+    try {
+      var response = await http.get(imageUrl,);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<Map> addAdvertisement({

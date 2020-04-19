@@ -61,6 +61,9 @@ class _Body extends StatelessWidget {
           final data = json.decode(snapshot.data.bodyString);
           final List list = data['data'];
 
+//          bool _ratedUp = false;
+//          bool _retedDown = false;
+
           return Column(
             children: <Widget>[
               Material(
@@ -90,40 +93,38 @@ class _Body extends StatelessWidget {
 //                        ],
 //                      ),
 
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  backgroundColor: Colors.transparent,
-                                  contentPadding: EdgeInsets.all(0.0),
-                                  content: Rating(
-                                    onRated: (rating, review) {
-
-                                    },
-                                  ),
-                                );
-                              }
-                          );
-                        },
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              'تقييم',
-                              style: TextStyle(
-                                fontFamily: 'Cairo',
-                                color: Color(0xff1f80a9),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(1.0),
-                            ),
-                            Icon(
-                              Icons.thumb_up,
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.thumb_up,
+                            color: Colors.green,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(2.0),
+                          ),
+                          Text('1'),
+                          Padding(
+                            padding: EdgeInsets.all(3.0),
+                          ),
+                          Icon(
+                            Icons.thumb_down,
+                            color: Colors.red,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(2.0),
+                          ),
+                          Text('1'),
+                          Padding(
+                            padding: EdgeInsets.all(5.0),
+                          ),
+                          Text(
+                            'تقييم',
+                            style: TextStyle(
+                              fontFamily: 'Cairo',
                               color: Color(0xff1f80a9),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       Padding(
                         padding: EdgeInsets.only(right: 50.0, left: 10.0),
@@ -159,7 +160,8 @@ class _Body extends StatelessWidget {
                       .of(context)
                       .size
                       .width,
-                  child: CustomScrollView(
+                  child: list != null && list.length > 0 ?
+                  CustomScrollView(
                     slivers: <Widget>[
                       SliverPadding(
                         padding: EdgeInsets.all(8.0),
@@ -180,6 +182,13 @@ class _Body extends StatelessWidget {
                         ),
                       )
                     ],
+                  )
+                      : Center(
+                    child: Text('ليس لهذا المستخدم أي إعلان',
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
                   ),
                 ),
               ),

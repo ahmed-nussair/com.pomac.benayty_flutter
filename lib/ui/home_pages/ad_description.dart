@@ -430,7 +430,7 @@ class _Body extends StatelessWidget {
                         Divider(),
 
                         // comments
-                        Column(
+                        commentsList != null ? Column(
                           children: List.generate(commentsList.length, (index) {
                             return Column(
                               children: <Widget>[
@@ -490,7 +490,7 @@ class _Body extends StatelessWidget {
                               ],
                             );
                           }),
-                        ),
+                        ) : Container(),
                       ],
                     ),
                   ),
