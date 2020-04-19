@@ -1,3 +1,4 @@
+import 'package:benayty/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 
@@ -149,8 +150,6 @@ class AdItem extends StatelessWidget {
             }
           }
         }
-
-
       }
     }
     return '$duration $durationUnit';
@@ -174,14 +173,43 @@ class AdItem extends StatelessWidget {
           shadowColor: Colors.grey,
           child: Stack(
             children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.network(
-                  imagePath,
-                  fit: BoxFit.cover,
-                  width: 120,
-                  height: 120,
-                ),
+              FutureBuilder<bool>(
+                future: Globals.isImageUrlWell(imagePath),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    bool isGoodUrl = snapshot.data;
+                    if (isGoodUrl) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          imagePath,
+                          fit: BoxFit.cover,
+                          width: 120,
+                          height: 120,
+                        ),
+                      );
+                    }
+
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.asset(
+                        'assets/logo.png',
+                        fit: BoxFit.cover,
+                        width: 120,
+                        height: 120,
+                      ),
+                    );
+                  }
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.asset(
+                      'assets/logo.png',
+                      fit: BoxFit.cover,
+                      width: 120,
+                      height: 120,
+                    ),
+                  );
+                },
               ),
               Positioned(
                 right: 0.0,

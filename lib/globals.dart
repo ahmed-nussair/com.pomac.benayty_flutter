@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +11,68 @@ class Globals {
 
   static String token = '1583861467mUAX0TtHPz1583861467';
   static int chattingTimestamp = 4294967296;
+
+  static final String serverToken = 'AAAAzjukw_w:APA91bHFsGpdzB9qNKXUaxrKgEzFxf'
+      'P93dsP59fSs4NneSwmcfmpiySd8M6N-2Lr0ZpJWjClt8hU-aoWXh7dL7wiWSqdePmPTrcEz'
+      'EDQaG9QIgH8RHgVvoAx5PkDiHor3BSHONBqpZNQ';
+  static final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+  Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
+    await firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(
+          sound: true, badge: true, alert: true, provisional: false),
+    );
+
+    await http.post(
+      'https://fcm.googleapis.com/fcm/send',
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'key=$serverToken',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'notification': <String, dynamic>{
+            'body': 'this is a body',
+            'title': 'this is a title'
+          },
+          'priority': 'high',
+          'data': <String, dynamic>{
+            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+            'id': '1',
+            'status': 'done'
+          },
+//          'to': await firebaseMessaging.getToken(),
+          'to': '/topics/benayty',
+        },
+      ),
+    );
+
+    final Completer<Map<String, dynamic>> completer =
+    Completer<Map<String, dynamic>>();
+
+    firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        completer.complete(message);
+      },
+    );
+
+    return completer.future;
+  }
+
+  static Future<dynamic> myBackgroundMessageHandler(
+      Map<String, dynamic> message) {
+    if (message.containsKey('data')) {
+      // Handle data message
+      final dynamic data = message['data'];
+    }
+
+    if (message.containsKey('notification')) {
+      // Handle notification message
+      final dynamic notification = message['notification'];
+    }
+
+    // Or do other work.
+  }
 
   static Future<bool> isImageUrlWell(String imageUrl) async {
     var response = await http.get(imageUrl,);

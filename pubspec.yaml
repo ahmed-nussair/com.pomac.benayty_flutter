@@ -30,6 +30,7 @@ dependencies:
   jiffy: ^3.0.1
   path_provider: ^1.6.5
   connectivity: ^0.4.8+2
+  firebase_messaging: ^6.0.13
   http:
   flutter:
     sdk: flutter

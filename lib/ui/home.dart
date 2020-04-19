@@ -78,6 +78,7 @@ class Home extends StatelessWidget {
     int _mainCategoryId = 0;
     String _mainCategoryTitle = '';
     String _adName = '';
+    String _userAdName = '';
     String _adUserName = '';
 
     int _mainItemIdForAdAdded = -1;
@@ -92,6 +93,7 @@ class Home extends StatelessWidget {
 
     int _userId = -1;
     int _adId = -1;
+    int _userAdId = -1;
 
     String _userIdForChatting = '';
     String _userNameForChatting = '';
@@ -268,7 +270,9 @@ class Home extends StatelessWidget {
                       : state is SearchPageState
                       ? 'نتائج البحث'
                       : state is AdDescriptionState
-                      ? _adName
+                      ? !(EventsStack
+                      .top()
+                  is NavigateToUserAdsPageEvent) ? _adName : _userAdName
                       : '',
                   style: TextStyle(
                     fontFamily: 'Cairo',
@@ -427,7 +431,9 @@ class Home extends StatelessWidget {
                 is NavigateToUserAdsPageEvent)
                     ? false
                     : true,
-                adId: _adId,
+                adId: !(EventsStack
+                    .top()
+                is NavigateToUserAdsPageEvent) ? _adId : _userAdId,
                 onDisplayUserAds:
                     (userId,
                     adUserName) {
@@ -474,9 +480,9 @@ class Home extends StatelessWidget {
                   onItemSelected:
                       (id,
                       title) {
-                    _adId =
+                    _userAdId =
                         id;
-                    _adName =
+                    _userAdName =
                         title;
                     EventsStack.push(
                         NavigateToUserAdsPageEvent());

@@ -139,7 +139,8 @@ class _Body extends StatelessWidget {
               children: <Widget>[
                 openedFromUserAds == false ? GestureDetector(
                   onTap: () {
-                    onDisplayUserAds(data['user_id'], data['user']['name']);
+                    onDisplayUserAds(
+                        int.parse(data['user_id']), data['user']['name']);
                   },
                   child: Material(
                     elevation: 10,
@@ -434,34 +435,30 @@ class _Body extends StatelessWidget {
                             return Column(
                               children: <Widget>[
                                 ListTile(
-                                  trailing: FutureBuilder(
+                                  trailing: FutureBuilder<bool>(
                                     future: Globals.isImageUrlWell(
                                         commentsList[index]['imagePath']),
                                     builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.done) {
-                                        if (snapshot.hasData) {
-                                          bool isGoodImageUrl = snapshot.data;
+                                      if (snapshot.hasData) {
+                                        bool isGoodImageUrl = snapshot.data;
 
-                                          if (isGoodImageUrl) {
-                                            return CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  commentsList[index]
-                                                  ['imagePath']),
-                                            );
-                                          }
-
+                                        if (isGoodImageUrl) {
                                           return CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                                'assets/default_user.png'),
+                                            backgroundImage: NetworkImage(
+                                                commentsList[index]
+                                                ['imagePath']),
                                           );
                                         }
+
                                         return CircleAvatar(
                                           backgroundImage: AssetImage(
                                               'assets/default_user.png'),
                                         );
                                       }
-                                      return CircularProgressIndicator();
+                                      return CircleAvatar(
+                                        backgroundImage: AssetImage(
+                                            'assets/default_user.png'),
+                                      );
                                     },
                                   ),
                                   title: Column(
