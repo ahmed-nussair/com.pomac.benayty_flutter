@@ -12,10 +12,9 @@ class Globals {
   static String token = '1583861467mUAX0TtHPz1583861467';
   static int chattingTimestamp = 4294967296;
 
-  static final String serverToken = 'AAAAzjukw_w:APA91bHFsGpdzB9qNKXUaxrKgEzFxf'
-      'P93dsP59fSs4NneSwmcfmpiySd8M6N-2Lr0ZpJWj'
-      'Clt8hU-aoWXh7dL7wiWSqdePmPTrcEzEDQaG9QIg'
-      'H8RHgVvoAx5PkDiHor3BSHONBqpZNQ';
+  static final String serverToken = 'AAAAWsdOdxM:APA91bHsMA1G0n7w9LzzLwTSoDeE'
+      'ByJ8yIP2cx9BmTOEm0qj6xcx-t5dWA8F8wo6zHCwSyV7z7Apt_lCRxkkkB3bNmgVAVuEBj'
+      'KqeckombtgpzpwyBRhjU9HB53Gzf3wMQp2nT43Rg6f';
   static final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   Future<Map<String, dynamic>> sendAndRetrieveMessage() async {
